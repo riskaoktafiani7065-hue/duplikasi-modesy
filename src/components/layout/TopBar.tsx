@@ -1,8 +1,8 @@
+"use client";
 
-const utilityLinks = [
-  "Contact",
-  "Sell on Modesy",
-];
+import AuthButtons from "./AuthButtons";
+
+const utilityLinks = ["Contact", "Sell on Modesy"];
 
 export default function TopBar() {
   return (
@@ -32,15 +32,7 @@ export default function TopBar() {
           🇺🇸 English⌄
         </button>
 
-        <div className="flex items-center gap-3">
-          <a href="/login" className="hover:text-[#00a99d]">
-            Login
-          </a>
-          <span>/</span>
-          <a href="/register" className="hover:text-[#00a99d]">
-            Register
-          </a>
-        </div>
+        <AuthButtons />
       </div>
     </div>
   );

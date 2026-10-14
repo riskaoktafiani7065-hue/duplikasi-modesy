@@ -1,5 +1,7 @@
+"use client";
 
 import Link from "next/link";
+import { useCurrency } from "@/components/layout/CurrencyContext";
 
 const products = [
   {
@@ -112,8 +114,16 @@ const products = [
 ];
 
 export default function FeaturedProducts() {
+  const { formatPrice, currency } = useCurrency();
+
   return (
     <section className="bg-white px-5 pb-10 pt-16 sm:px-6">
+      <p className="mb-2 text-sm text-gray-500">
+        Mata uang aktif: {currency}
+      </p>
+
+      {/* Lanjutkan kode Featured Products kamu di sini */}
+
       <div className="mb-7 flex items-center justify-between">
         <h2 className="text-2xl font-bold text-[#252525]">
           Featured Products
@@ -143,7 +153,6 @@ export default function FeaturedProducts() {
               </div>
             </Link>
 
-            {/* Tombol muncul ketika produk diarahkan */}
             <div className="pointer-events-none invisible absolute right-3 top-3 z-10 flex flex-col gap-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
               <button
                 type="button"
@@ -216,43 +225,60 @@ export default function FeaturedProducts() {
                   ))}
                 </div>
 
-                <span className="text-sm text-gray-400">♡ 0</span>
+                <span className="text-sm text-gray-400">
+                  ♡ {product.wishlist}
+                </span>
               </div>
 
               <div className="mt-3 flex flex-wrap items-center gap-2">
-                <span className="font-bold text-[#35a853]">
-                  ${product.price}
-                </span>
+                {product.quote ? (
+                  <span className="font-bold text-[#35a853]">
+                    Contact for price
+                  </span>
+                ) : product.free ? (
+                  <span className="font-bold text-[#35a853]">
+                    Free
+                  </span>
+                ) : (
+                  <>
+                    <span className="font-bold text-[#35a853]">
+                      {formatPrice(product.price)}
+                    </span>
 
-                <span className="text-sm text-gray-400 line-through">
-                  ${product.oldPrice}
-                </span>
+                    {product.oldPrice !== undefined && (
+                      <span className="text-sm text-gray-400 line-through">
+                        {formatPrice(product.oldPrice)}
+                      </span>
+                    )}
+                  </>
+                )}
               </div>
             </div>
           </article>
         ))}
-      </div>           
-        <div className="mt-10 flex justify-center">
-          <button
-            type="button"
-            className="inline-flex items-center gap-2 text-base font-normal text-[#252525] transition hover:text-[#00a99d]"
+      </div>
+
+      <div className="mt-10 flex justify-center">
+        <button
+          type="button"
+          className="inline-flex items-center gap-2 text-base font-normal text-[#252525] transition hover:text-[#00a99d]"
+        >
+          Load More
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           >
-            Load More
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="m6 9 6 6 6-6" />
-            </svg>
-          </button>
-        </div>
+            <path d="m6 9 6 6 6-6" />
+          </svg>
+        </button>
+      </div>
     </section>
   );
 }

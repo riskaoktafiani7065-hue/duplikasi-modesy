@@ -18,6 +18,9 @@ const categoriesWithMenu = [
   "Home & Living",
   "Jewelry & Accessories",
   "Toys & Entertainment",
+  "Graphics & Photos",
+  "Video & Audio",
+  "Web Templates & Code",
 ] as const;
 
 type MenuCategory = (typeof categoriesWithMenu)[number];

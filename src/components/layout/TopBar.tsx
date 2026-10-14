@@ -1,6 +1,7 @@
 "use client";
 
 import AuthButtons from "./AuthButtons";
+import CurrencyDropdown from "@/components/layout/CurrencyDropdown";
 
 const utilityLinks = ["Contact", "Sell on Modesy"];
 
@@ -20,15 +21,15 @@ export default function TopBar() {
       </div>
 
       <div className="flex items-center gap-6">
-        <button className="hover:text-[#00a99d]">
+        <button type="button" className="hover:text-[#00a99d]">
           📍 Location
         </button>
 
-        <button className="hover:text-[#00a99d]">
-          USD ($)⌄
-        </button>
+        <div className="hover:text-[#00a99d]">
+          <CurrencyDropdown />
+        </div>
 
-        <button className="hover:text-[#00a99d]">
+        <button type="button" className="hover:text-[#00a99d]">
           🇺🇸 English⌄
         </button>
 

@@ -1,3 +1,4 @@
+
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
@@ -18,6 +19,11 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "images.unsplash.com",
         pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "modesy.codingest.net",
+        pathname: "/uploads/**",
       },
     ],
   },

@@ -1,3 +1,4 @@
+
 import Image from "next/image";
 import Link from "next/link";
 
@@ -17,7 +18,10 @@ type MenuCategory =
   | "Shoes"
   | "Home & Living"
   | "Jewelry & Accessories"
-  | "Toys & Entertainment";
+  | "Toys & Entertainment"
+  | "Graphics & Photos"
+  | "Video & Audio"
+  | "Web Templates & Code";
 
 type MegaMenuProps = {
   category: MenuCategory;
@@ -150,7 +154,10 @@ const menuData: Record<
       },
       {
         title: "Furniture",
-        items: ["Living Room Furniture", "Dining Room Furniture"],
+        items: [
+          "Living Room Furniture",
+          "Dining Room Furniture",
+        ],
       },
       {
         title: "Office",
@@ -246,7 +253,11 @@ const menuData: Record<
       },
       {
         title: "Magazines",
-        items: ["Arts", "Music & Photography", "Fashion & Style"],
+        items: [
+          "Arts",
+          "Music & Photography",
+          "Fashion & Style",
+        ],
       },
       {
         title: "Toys",
@@ -258,7 +269,10 @@ const menuData: Record<
       },
       {
         title: "Headphones",
-        items: ["Over-Ear Headphones", "Earbud Headphones"],
+        items: [
+          "Over-Ear Headphones",
+          "Earbud Headphones",
+        ],
       },
       {
         title: "Movies",
@@ -286,27 +300,197 @@ const menuData: Record<
       },
     ],
   },
+
+  "Graphics & Photos": {
+    groups: [
+      {
+        title: "Graphics",
+        items: ["Icons", "Vectors", "Add-ons"],
+      },
+      {
+        title: "Web Elements",
+        items: ["Badges Stickers", "Banners Ads"],
+      },
+      {
+        title: "Logos",
+        items: ["Abstract", "Company", "Numbers", "Objects"],
+      },
+      {
+        title: "Photos",
+        items: [
+          "Animals",
+          "Architecture & Business",
+          "Food & Health",
+          "Sports & People",
+          "Technology & Travel",
+        ],
+      },
+    ],
+    featured: [
+      {
+        title: "Graphics",
+        image:
+          "https://modesy.codingest.net/uploads/category/category_64fa33817aca32-54738529.webp",
+        category: "Graphics",
+      },
+      {
+        title: "Vectors",
+        image:
+          "https://modesy.codingest.net/uploads/category/category_64fa3439ef0fc1-66361806.webp",
+        category: "Web Elements",
+      },
+      {
+        title: "Banners Ads",
+        image:
+          "https://modesy.codingest.net/uploads/category/category_64fa344b5849c4-00906116.webp",
+        category: "Logos",
+      },
+      {
+        title: "Photos",
+        image:
+          "https://modesy.codingest.net/uploads/category/category_64fa33901418c3-36607181.webp",
+        category: "Photos",
+      },
+    ],
+  },
+
+  "Video & Audio": {
+    groups: [
+      {
+        title: "After Effects",
+        items: [
+          "Video Overlays & Elements",
+          "Product Promo",
+          "Video Displays",
+        ],
+      },
+      {
+        title: "Premiere Pro",
+        items: [
+          "Broadcast Packages",
+          "Product Promo",
+          "Video Displays",
+        ],
+      },
+      {
+        title: "Music",
+        items: [
+          "Ambient",
+          "Cinematic Music",
+          "Classical Music",
+          "Corporate",
+        ],
+      },
+      {
+        title: "Sound Effects",
+        items: [
+          "Cartoon Sounds",
+          "Domestic Sounds",
+          "Futuristic Sounds",
+          "Nature Sounds",
+          "Human Sounds",
+        ],
+      },
+    ],
+    featured: [
+      {
+        title: "After Effects",
+        image:
+          "https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=500&q=80",
+        category: "After Effects",
+      },
+      {
+        title: "Premiere Pro",
+        image:
+          "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=500&q=80",
+        category: "Premiere Pro",
+      },
+      {
+        title: "Music",
+        image:
+          "https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&w=500&q=80",
+        category: "Music",
+      },
+      {
+        title: "Sound Effects",
+        image:
+          "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=500&q=80",
+        category: "Sound Effects",
+      },
+    ],
+  },
+
+  "Web Templates & Code": {
+    groups: [
+      {
+        title: "WordPress Templates",
+        items: [
+          "Blog & Magazine",
+          "Directory & Listing",
+          "Real Estate",
+        ],
+      },
+      {
+        title: "HTML Templates",
+        items: ["Corporate", "Creative", "Other"],
+      },
+      {
+        title: "PHP Scripts",
+        items: [
+          "eCommerce",
+          "Miscellaneous",
+          "Corporate",
+          "Education",
+        ],
+      },
+      {
+        title: "Plugins",
+        items: ["Widgets"],
+      },
+      {
+        title: "JavaScript & CSS",
+        items: ["Calendars", "Charts And Graphs"],
+      },
+    ],
+    featured: [],
+  },
 };
 
 export default function MegaMenu({ category }: MegaMenuProps) {
   const { groups, featured } = menuData[category];
 
+  const isWebTemplates = category === "Web Templates & Code";
+
+  const isFourColumn =
+    category === "Graphics & Photos" ||
+    category === "Video & Audio";
+
   return (
     <div className="invisible absolute left-1/2 top-full z-50 w-[min(1320px,calc(100vw-48px))] -translate-x-1/2 translate-y-2 border border-gray-100 bg-white opacity-0 shadow-lg transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
-      <div className="grid grid-cols-12 gap-8 px-8 py-8">
-        <div className="col-span-7 grid grid-cols-3 gap-x-6 gap-y-7">
+      <div className="grid grid-cols-12 gap-6 px-6 py-8">    
+        <div
+          className={`${
+            isWebTemplates ? "col-span-12" : "col-span-7"
+          } grid ${
+            isWebTemplates
+              ? "grid-cols-5 gap-x-8 gap-y-7"
+              : isFourColumn
+                ? "grid-cols-4 gap-x-6 gap-y-7"
+                : "grid-cols-3 gap-x-6 gap-y-7"
+          }`}
+        >         
           {groups.map((group) => (
-            <div key={group.title}>
-              <h3 className="mb-4 text-sm font-semibold text-[#222]">
+            <div key={group.title} className="min-w-0">
+              <h3 className="mb-4 wrap-break-word text-sm font-semibold leading-5 text-[#222]">
                 {group.title}
               </h3>
 
               <ul className="space-y-2.5">
                 {group.items.map((item) => (
-                  <li key={item}>
+                  <li key={`${group.title}-${item}`}>
                     <Link
                       href={`/products?category=${encodeURIComponent(item)}`}
-                      className="text-[13px] leading-5 text-gray-500 transition hover:text-[#00a99d] focus-visible:text-[#00a99d]"
+                      className="block wrap-break-word text-[13px] leading-5 text-gray-500 transition hover:text-[#00a99d] focus-visible:text-[#00a99d]"
                     >
                       {item}
                     </Link>
@@ -317,29 +501,35 @@ export default function MegaMenu({ category }: MegaMenuProps) {
           ))}
         </div>
 
-        <div className="col-span-5 grid grid-cols-3 gap-4">
-          {featured.map((item) => (
-            <Link
-              key={item.title}
-              href={`/products?category=${encodeURIComponent(item.category)}`}
-              className="group/featured block min-w-0"
-            >
-              <div className="relative aspect-3/4 overflow-hidden bg-gray-100">
-                <Image
-                  src={item.image}
-                  alt={item.title}
-                  fill
-                  sizes="(max-width: 768px) 30vw, 180px"
-                  className="object-cover transition duration-300 group-hover/featured:scale-105"
-                />
-              </div>
+        {!isWebTemplates && featured.length > 0 && (
+          <div
+            className={`col-span-5 grid gap-4 ${
+              isFourColumn ? "grid-cols-4" : "grid-cols-3"
+            }`}
+          >
+            {featured.map((item) => (
+              <Link
+                key={item.title}
+                href={`/products?category=${encodeURIComponent(item.category)}`}
+                className="group/featured block min-w-0"
+              >
+                <div className="relative aspect-3/4 overflow-hidden bg-gray-100">
+                  <Image
+                    src={item.image}
+                    alt={item.title}
+                    fill
+                    sizes="(max-width: 768px) 30vw, 180px"
+                    className="object-cover transition duration-300 group-hover/featured:scale-105"
+                  />
+                </div>
 
-              <p className="mt-3 text-center text-xs font-medium text-[#333] transition group-hover/featured:text-[#00a99d]">
-                {item.title}
-              </p>
-            </Link>
-          ))}
-        </div>
+                <p className="mt-3 text-center text-xs font-medium text-[#333] transition group-hover/featured:text-[#00a99d]">
+                  {item.title}
+                </p>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

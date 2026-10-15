@@ -1,40 +1,23 @@
-
 "use client";
 
-import { useEffect, useState } from "react";
-import { Bell, ChevronDown, Globe, Menu, X } from "lucide-react";
+import { Bell, ChevronDown, Globe, Menu } from "lucide-react";
 
-export default function AdminHeader({ email }: { email: string }) {
-  const [collapsed, setCollapsed] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-
-  useEffect(() => {
-    document.body.classList.toggle("admin-sidebar-collapsed", collapsed);
-    document.body.classList.toggle("admin-sidebar-open", mobileOpen);
-
-    return () => {
-      document.body.classList.remove("admin-sidebar-collapsed");
-      document.body.classList.remove("admin-sidebar-open");
-    };
-  }, [collapsed, mobileOpen]);
-
-  function toggleSidebar() {
-    if (window.matchMedia("(max-width: 767px)").matches) {
-      setMobileOpen((open) => !open);
-    } else {
-      setCollapsed((value) => !value);
-    }
-  }
-
+export default function AdminHeader({
+  email,
+  onMenuClick,
+}: {
+  email: string;
+  onMenuClick: () => void;
+}) {
   return (
     <header className="admin-topbar sticky top-0 z-30 flex h-[61px] items-center justify-between border-b border-gray-200 bg-white px-4 sm:px-6">
       <button
         type="button"
-        onClick={toggleSidebar}
+        onClick={onMenuClick}
         aria-label="Buka atau tutup sidebar"
         className="flex size-9 items-center justify-center text-gray-500 transition hover:text-gray-900"
       >
-        {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+        <Menu size={20} />
       </button>
 
       <div className="flex items-center gap-4 sm:gap-6">

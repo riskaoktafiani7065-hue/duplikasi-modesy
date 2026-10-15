@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import type { ComponentType } from "react";
 import {
   Home,
   Palette,
   SlidersHorizontal,
-  Image,
+  Image as ImageIcon,
   ShoppingBag,
   Package,
   Tags,
@@ -39,12 +40,15 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
-type MenuChild = { label: string; href: string };
+type MenuChild = {
+  label: string;
+  href: string;
+};
 
 type MenuItem = {
   label: string;
   href: string;
-  icon: React.ComponentType<{ size?: number; strokeWidth?: number }>;
+  icon: ComponentType<{ size?: number; strokeWidth?: number }>;
   children?: MenuChild[];
 };
 
@@ -60,7 +64,7 @@ const groups: MenuGroup[] = [
       { label: "Home", href: "/admin", icon: Home },
       { label: "Theme", href: "/admin/theme", icon: Palette },
       { label: "Slider", href: "/admin/slider", icon: SlidersHorizontal },
-      { label: "Homepage Manager", href: "/admin/homepage", icon: Image },
+      { label: "Homepage Manager", href: "/admin/homepage", icon: ImageIcon },
     ],
   },
   {
@@ -159,141 +163,214 @@ const groups: MenuGroup[] = [
 ];
 
 type Props = {
-  isOpen: boolean;
-  onClose: () => void;
+  isOpen?: boolean;
+  collapsed?: boolean;
+  onClose?: () => void;
 };
 
-export default function AdminSidebar({ isOpen, onClose }: Props) {
+export default function AdminSidebar({
+  isOpen = false,
+  collapsed = false,
+  onClose,
+}: Props) {
   const pathname = usePathname();
   const router = useRouter();
+  const supabase = useMemo(() => createClient(), []);
+
   const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
-  const [user, setUser] = useState<any>(null);
-  const supabase = createClient();
+  const [user, setUser] = useState<{
+    email?: string;
+    user_metadata?: { name?: string; full_name?: string };
+  } | null>(null);
+  const [loggingOut, setLoggingOut] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setUser(data.user));
+    let active = true;
+
+    async function loadUser() {
+      const { data, error } = await supabase.auth.getUser();
+      if (!error && active) setUser(data.user);
+    }
+
+    void loadUser();
+
+    return () => {
+      active = false;
+    };
   }, [supabase]);
 
-  async function handleLogout() {
-    await supabase.auth.signOut();
-    router.replace("/");
-    router.refresh();
+  useEffect(() => {
+    setOpenMenus((previous) => {
+      const next = { ...previous };
+
+      for (const group of groups) {
+        for (const item of group.items) {
+          if (
+            item.children?.some(
+              (child) => pathname === child.href.split("?")[0],
+            )
+          ) {
+            next[item.label] = true;
+          }
+        }
+      }
+
+      return next;
+    });
+  }, [pathname]);
+
+  function handleClose() {
+    onClose?.();
   }
 
-  // Info user
+  async function handleLogout() {
+    if (loggingOut) return;
+
+    setLoggingOut(true);
+
+    try {
+      const { error } = await supabase.auth.signOut();
+
+      if (error) {
+        console.error("Gagal logout:", error.message);
+        setLoggingOut(false);
+        return;
+      }
+
+      router.replace("/");
+      router.refresh();
+    } catch (error) {
+      console.error("Terjadi kesalahan saat logout:", error);
+      setLoggingOut(false);
+    }
+  }
+
   const displayName =
-    user?.user_metadata?.name || user?.email?.split("@")[0] || "Admin";
+    user?.user_metadata?.name ||
+    user?.user_metadata?.full_name ||
+    user?.email?.split("@")[0] ||
+    "Admin";
+
   const initial = displayName.charAt(0).toUpperCase();
+
+  function isActive(href: string) {
+    if (href === "/admin") return pathname === "/admin";
+    return pathname === href || pathname.startsWith(`${href}/`);
+  }
 
   return (
     <>
-      {/* Overlay — mobile only */}
+      {/* Overlay untuk mobile */}
       {isOpen && (
-        <div
+        <button
+          type="button"
+          aria-label="Tutup menu navigasi"
           className="fixed inset-0 z-40 bg-black/50 lg:hidden"
-          onClick={onClose}
-          aria-hidden="true"
+          onClick={handleClose}
         />
       )}
 
       <aside
-        className={`admin-sidebar fixed inset-y-0 left-0 z-50 flex w-[250px] flex-col overflow-hidden text-white transition-transform duration-300 lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 flex h-screen w-[260px] shrink-0 flex-col overflow-hidden bg-[#1f2a3a] text-white transition-transform duration-300 lg:sticky lg:top-0 lg:z-auto lg:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        } ${collapsed ? "lg:hidden" : ""}`}
       >
-        {/* Header — logo + close button */}
-        <div className="flex h-[54px] shrink-0 items-center justify-between border-b border-white/[0.07] px-5">
+        {/* Logo */}
+        <div className="relative flex h-[61px] shrink-0 items-center justify-center border-b border-white/[0.08] px-4">
           <Link
             href="/admin"
-            className="text-[15px] font-semibold tracking-wide"
-            onClick={onClose}
+            onClick={handleClose}
+            className="text-[17px] font-semibold tracking-[0.2px]"
           >
-            Modesy <span className="font-normal text-gray-300">Panel</span>
+            Modesy <span className="font-normal text-slate-300">Panel</span>
           </Link>
+
           <button
             type="button"
             aria-label="Tutup sidebar"
-            onClick={onClose}
-            className="rounded p-1 text-gray-400 hover:bg-white/10 lg:hidden"
+            onClick={handleClose}
+            className="absolute right-3 rounded p-1 text-slate-400 hover:bg-white/10 lg:hidden"
           >
-            <X size={16} />
+            <X size={17} />
           </button>
         </div>
 
-        {/* User info */}
-        <div className="flex shrink-0 items-center gap-3 border-b border-white/[0.07] px-4 py-4">
-          <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-cyan-300 to-violet-500 text-sm font-bold text-slate-900">
+        {/* Profil admin */}
+        <div className="flex min-h-[91px] shrink-0 items-center gap-3 border-b border-white/[0.08] px-5 py-4">
+          <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#e9edf2] text-sm font-semibold text-[#354253]">
             {initial}
           </div>
+
           <div className="min-w-0 flex-1">
-            <p className="truncate text-xs font-semibold">{displayName}</p>
-            <p className="mt-1 flex items-center gap-1.5 text-[10px] text-gray-400">
-              <span className="size-1.5 rounded-full bg-emerald-400" /> Online
+            <p className="truncate text-[12px] font-semibold text-white">
+              {displayName}
+            </p>
+            <p className="mt-1.5 flex items-center gap-1.5 text-[11px] text-slate-400">
+              <span className="size-[7px] rounded-full bg-[#19c99a]" />
+              Online
             </p>
           </div>
         </div>
 
-        {/* Menu */}
-        <nav className="admin-sidebar-nav flex-1 overflow-y-auto px-2 pb-5 pt-3">
+        {/* Navigasi */}
+        <nav className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto pb-4 pt-2 [scrollbar-width:thin] [scrollbar-color:#3a4658_transparent]">
           {groups.map((group) => (
-            <section key={group.title} className="mb-3">
-              <p className="px-3 pb-2 pt-2 text-[9px] font-semibold tracking-[0.13em] text-slate-400/70">
+            <section key={group.title} className="mb-2">
+              <p className="px-5 pb-2 pt-4 text-[10px] tracking-[0.15em] text-[#94a2b4]">
                 {group.title}
               </p>
+
               {group.items.map((item) => {
                 const Icon = item.icon;
-                const children = item.children;
-                const active =
-                  pathname === item.href ||
-                  (item.href !== "/admin" &&
-                    pathname.startsWith(item.href + "/"));
-                const expanded =
-                  openMenus[item.label] ??
-                  Boolean(
-                    children?.some(
-                      (child) => pathname === child.href.split("?")[0]
-                    )
-                  );
+                const hasChildren = Boolean(item.children?.length);
+                const active = isActive(item.href);
+                const expanded = openMenus[item.label] ?? false;
+
+                const linkClass = `flex min-h-10 w-full items-center gap-3 px-5 text-left text-[12px] transition-colors ${
+                  active
+                    ? "bg-white/[0.09] font-medium text-white"
+                    : "text-[#c0cad6] hover:bg-white/[0.06] hover:text-white"
+                }`;
 
                 return (
                   <div key={item.label}>
-                    {children ? (
+                    {hasChildren ? (
                       <>
                         <button
                           type="button"
                           onClick={() =>
-                            setOpenMenus((prev) => ({
-                              ...prev,
+                            setOpenMenus((previous) => ({
+                              ...previous,
                               [item.label]: !expanded,
                             }))
                           }
                           aria-expanded={expanded}
-                          className={`admin-nav-link ${
-                            active ? "admin-nav-active" : ""
-                          }`}
+                          className={linkClass}
                         >
-                          <Icon size={14} strokeWidth={1.8} />
-                          <span className="flex-1 text-left">{item.label}</span>
+                          <Icon size={16} strokeWidth={1.7} />
+                          <span className="min-w-0 flex-1">{item.label}</span>
                           {expanded ? (
-                            <ChevronDown size={13} />
+                            <ChevronDown size={14} />
                           ) : (
-                            <ChevronRight size={13} />
+                            <ChevronRight size={14} />
                           )}
                         </button>
+
                         {expanded && (
-                          <div className="mb-1 ml-[27px] border-l border-white/10 pl-2">
-                            {children.map((child) => {
-                              const childPath = child.href.split("?")[0];
-                              const childActive = pathname === childPath;
+                          <div className="mb-1 ml-[43px] border-l border-white/[0.13] py-1 pl-2">
+                            {item.children?.map((child) => {
+                              const childActive =
+                                pathname === child.href.split("?")[0];
+
                               return (
                                 <Link
                                   key={child.href}
                                   href={child.href}
-                                  onClick={onClose}
-                                  className={`block rounded px-2.5 py-2 text-[10px] transition ${
+                                  onClick={handleClose}
+                                  className={`block rounded-sm px-2.5 py-2 text-[11px] transition-colors ${
                                     childActive
-                                      ? "bg-white/10 text-white"
-                                      : "text-slate-400 hover:text-white"
+                                      ? "bg-white/[0.09] text-white"
+                                      : "text-[#b4bfcc] hover:bg-white/[0.05] hover:text-white"
                                   }`}
                                 >
                                   {child.label}
@@ -306,12 +383,10 @@ export default function AdminSidebar({ isOpen, onClose }: Props) {
                     ) : (
                       <Link
                         href={item.href}
-                        onClick={onClose}
-                        className={`admin-nav-link ${
-                          active ? "admin-nav-active" : ""
-                        }`}
+                        onClick={handleClose}
+                        className={linkClass}
                       >
-                        <Icon size={14} strokeWidth={1.8} />
+                        <Icon size={16} strokeWidth={1.7} />
                         <span>{item.label}</span>
                       </Link>
                     )}
@@ -322,21 +397,26 @@ export default function AdminSidebar({ isOpen, onClose }: Props) {
           ))}
         </nav>
 
-        {/* Footer — View Site + Logout */}
-        <div className="shrink-0 border-t border-white/[0.07] p-3">
+        {/* Footer */}
+        <div className="shrink-0 border-t border-white/[0.08] p-3">
           <Link
             href="/"
             target="_blank"
-            className="mb-1 flex items-center gap-2 rounded px-3 py-2 text-xs text-slate-300 hover:bg-white/[0.06]"
+            rel="noopener noreferrer"
+            className="mb-1 flex min-h-10 items-center gap-3 rounded-sm px-4 text-[12px] text-[#c0cad6] transition-colors hover:bg-white/[0.06] hover:text-white"
           >
-            <Globe size={14} /> View Site
+            <Globe size={16} strokeWidth={1.7} />
+            <span>View Site</span>
           </Link>
+
           <button
             type="button"
+            disabled={loggingOut}
             onClick={handleLogout}
-            className="flex w-full items-center gap-2 rounded px-3 py-2 text-xs text-slate-300 hover:bg-red-500/10 hover:text-red-300"
+            className="flex min-h-10 w-full items-center gap-3 rounded-sm px-4 text-left text-[12px] text-[#c0cad6] transition-colors hover:bg-red-500/10 hover:text-red-300 disabled:opacity-50"
           >
-            <LogOut size={14} /> Logout
+            <LogOut size={16} strokeWidth={1.7} />
+            <span>{loggingOut ? "Logging out..." : "Logout"}</span>
           </button>
         </div>
       </aside>

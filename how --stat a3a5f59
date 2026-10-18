@@ -1,0 +1,21 @@
+[33mcommit ccec8e9ab26dfc04e1ee4c884c5a873d2eaba74c[m
+Author: Rizal <rizalabdurrahman877@gmail.com>
+Date:   Tue Oct 13 11:47:11 2026 +0700
+
+    feat(admin): tambah modal login & register + update header
+
+ package-lock.json                     | 171 [32m+++++++++++++++++++++++++++++++++[m[31m-[m
+ package.json                          |   7 [32m+[m[31m-[m
+ src/app/api/auth/logout/route.ts      |   8 [32m++[m
+ src/app/auth/callback/route.ts        |  18 [32m++++[m
+ src/app/layout.tsx                    |  35 [32m++++[m[31m---[m
+ src/components/auth/AuthModals.tsx    |  34 [32m+++++++[m
+ src/components/auth/LoginModal.tsx    | 152 [32m++++++++++++++++++++++++++++++[m
+ src/components/auth/RegisterModal.tsx | 145 [32m++++++++++++++++++++++++++++[m
+ src/components/layout/AuthButtons.tsx |  75 [32m+++++++++++++++[m
+ src/components/layout/MainHeader.tsx  |   2 [32m+[m
+ src/components/layout/TopBar.tsx      |  20 [32m++[m[31m--[m
+ src/lib/supabase/client.ts            |   8 [32m++[m
+ src/lib/supabase/server.ts            |  27 [32m++++++[m
+ src/lib/utils.ts                      |  15 [32m+++[m
+ 14 files changed, 680 insertions(+), 37 deletions(-)

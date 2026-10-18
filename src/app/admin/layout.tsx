@@ -1,36 +1,36 @@
-﻿import { redirect } from "next/navigation";
+﻿import type { ReactNode } from "react";
+import { redirect } from "next/navigation";
+
 import { createClient } from "@/lib/supabase/server";
-import AdminSidebar from "@/components/admin/Sidebar";
+import AdminShell from "@/components/admin/AdminShell";
 
 export default async function AdminLayout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+}: Readonly<{
+  children: ReactNode;
+}>) {
   const supabase = await createClient();
 
   const {
     data: { user },
+    error: authError,
   } = await supabase.auth.getUser();
 
-  if (!user) {
+  if (authError || !user) {
     redirect("/");
   }
 
-  const { data: profile } = await supabase
+  const { data: profile, error: profileError } = await supabase
     .from("profiles")
     .select("role")
     .eq("id", user.id)
-    .single();
+    .maybeSingle();
 
-  if (!profile || profile.role !== "ADMIN") {
+  if (profileError || profile?.role !== "ADMIN") {
     redirect("/");
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <AdminSidebar />
-      <main className="ml-64 min-h-screen p-6">{children}</main>
-    </div>
+    <AdminShell email={user.email ?? "Admin"}>{children}</AdminShell>
   );
 }

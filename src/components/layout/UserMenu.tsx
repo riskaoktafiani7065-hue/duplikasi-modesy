@@ -87,7 +87,7 @@ export default function UserMenu({ user, role }: Props) {
             className="h-8 w-8 rounded-full object-cover"
           />
         ) : (
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-[#00a99d] to-[#008f85] text-xs font-bold text-white">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-linear-to-br from-[#00a99d] to-[#008f85] text-xs font-bold text-white">
             {initial}
           </span>
         )}

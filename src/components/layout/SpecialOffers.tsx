@@ -1,5 +1,8 @@
 
+"use client";
+
 import Link from "next/link";
+import { useCurrency } from "@/components/layout/CurrencyContext";
 
 const products = [
   {
@@ -64,28 +67,9 @@ const products = [
   },
 ];
 
-const banners = [
-  {
-    title: "Summer",
-    subtitle: "Choose your style, make your summer.",
-    image:
-      "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=1200&q=85",
-    label: "DISCOUNT",
-    discount: "25%",
-    date: "ON JUNE 29",
-  },
-  {
-    title: "Autumn",
-    subtitle: "Sale",
-    image:
-      "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=85",
-    label: "50%",
-    discount: "OFF",
-    date: "Limited Time",
-  },
-];
-
 export default function SpecialOffers() {
+  const { formatPrice } = useCurrency();
+
   return (
     <section className="bg-white px-5 py-8 sm:px-6">
       <h2 className="mb-7 text-2xl font-bold text-[#252525]">
@@ -99,7 +83,7 @@ export default function SpecialOffers() {
             key={product.name}
             className="group relative min-w-0 overflow-hidden rounded-md border border-gray-200 bg-white transition hover:shadow-md"
           >
-            {/* Area gambar */}
+            {/* Gambar produk */}
             <Link href="/products" className="block">
               <div className="relative aspect-[4/4.1] overflow-hidden bg-gray-100">
                 <img
@@ -108,15 +92,14 @@ export default function SpecialOffers() {
                   className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
                 />
 
-                {/* Label diskon */}
                 <span className="absolute left-0 top-0 rounded-br-xl bg-[#ff3548] px-3 py-2 text-sm font-semibold text-white">
                   {product.discount}
                 </span>
               </div>
             </Link>
 
-            {/* Tombol muncul saat hover pada gambar */}
-            <div className="pointer-events-none absolute right-3 top-3 z-10 flex invisible flex-col gap-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
+            {/* Tombol hover */}
+            <div className="pointer-events-none invisible absolute right-3 top-3 z-10 flex flex-col gap-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
               <button
                 type="button"
                 aria-label={`Add ${product.name} to cart`}
@@ -173,7 +156,7 @@ export default function SpecialOffers() {
                 {product.seller}
               </p>
 
-              {/* Rating dan jumlah wishlist */}
+              {/* Rating */}
               <div className="mt-2 flex items-center justify-between gap-1">
                 <div
                   className="whitespace-nowrap text-lg tracking-[-2px]"
@@ -198,14 +181,14 @@ export default function SpecialOffers() {
                 </span>
               </div>
 
-              {/* Harga */}
+              {/* Harga mengikuti mata uang terpilih */}
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 <span className="font-bold text-[#35a853]">
-                  ${product.price}
+                  {formatPrice(product.price)}
                 </span>
 
                 <span className="text-sm font-medium text-gray-400 line-through">
-                  ${product.oldPrice}
+                  {formatPrice(product.oldPrice)}
                 </span>
               </div>
             </div>

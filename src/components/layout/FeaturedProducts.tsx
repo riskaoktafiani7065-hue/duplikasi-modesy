@@ -1,11 +1,15 @@
+"use client";
 
+import { useState } from "react";
 import Link from "next/link";
+import { useCurrency } from "@/components/layout/CurrencyContext";
 
 const products = [
   {
     name: "Black midi skirt with white flowers",
     seller: "Trendshop",
-    image: "https://modesy.codingest.net/uploads/images/202508/img_w480_68b48029e507b3-80580535.webp",
+    image:
+      "https://modesy.codingest.net/uploads/images/202508/img_w480_68b48029e507b3-80580535.webp",
     price: 48,
     oldPrice: 55,
     rating: 4,
@@ -14,7 +18,8 @@ const products = [
   {
     name: "Handcrafted decorative pillow for a luxurious touch",
     seller: "Admin",
-    image: "https://modesy.codingest.net/uploads/images/202508/img_w480_68b4833ada8cd5-61059376.webp",
+    image:
+      "https://modesy.codingest.net/uploads/images/202508/img_w480_68b4833ada8cd5-61059376.webp",
     price: 59,
     oldPrice: 69,
     rating: 0,
@@ -23,7 +28,8 @@ const products = [
   {
     name: "Floral women sundress",
     seller: "Admin",
-    image: "https://images.unsplash.com/photo-1495385794356-15371f348c31?auto=format&fit=crop&w=500&q=80",
+    image:
+      "https://images.unsplash.com/photo-1495385794356-15371f348c31?auto=format&fit=crop&w=500&q=80",
     price: 80,
     oldPrice: 89,
     rating: 4,
@@ -32,7 +38,8 @@ const products = [
   {
     name: "Sun hat for women protection cap",
     seller: "Trendshop",
-    image: "https://images.unsplash.com/photo-1521369909029-2afed882baee?auto=format&fit=crop&w=500&q=80",
+    image:
+      "https://images.unsplash.com/photo-1521369909029-2afed882baee?auto=format&fit=crop&w=500&q=80",
     price: 29,
     rating: 0,
     wishlist: 0,
@@ -40,7 +47,8 @@ const products = [
   {
     name: "Sneaker shoes men",
     seller: "Trendshop",
-    image: "https://images.unsplash.com/photo-1495555961986-6d4c1ecb7be3?auto=format&fit=crop&w=500&q=80",
+    image:
+      "https://images.unsplash.com/photo-1495555961986-6d4c1ecb7be3?auto=format&fit=crop&w=500&q=80",
     price: 89,
     oldPrice: 100,
     rating: 0,
@@ -49,7 +57,8 @@ const products = [
   {
     name: "Women kipling bailey saddle handbag",
     seller: "Admin",
-    image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=500&q=80",
+    image:
+      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=500&q=80",
     price: 59,
     oldPrice: 69,
     rating: 0,
@@ -58,7 +67,8 @@ const products = [
   {
     name: "Cobalt man t-shirt all colors",
     seller: "Admin",
-    image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=500&q=80",
+    image:
+      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=500&q=80",
     price: 0,
     rating: 0,
     wishlist: 1,
@@ -67,7 +77,8 @@ const products = [
   {
     name: "Adorable animals photo pack",
     seller: "Admin",
-    image: "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=500&q=80",
+    image:
+      "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=500&q=80",
     price: 0,
     rating: 0,
     wishlist: 1,
@@ -76,7 +87,8 @@ const products = [
   {
     name: "Moment of inspiration piano music",
     seller: "Admin",
-    image: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=500&q=80",
+    image:
+      "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&w=500&q=80",
     price: 15,
     oldPrice: 34,
     rating: 0,
@@ -85,7 +97,8 @@ const products = [
   {
     name: "Animation of popular vacation spots",
     seller: "Trendshop",
-    image: "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=500&q=80",
+    image:
+      "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=500&q=80",
     price: 10,
     oldPrice: 15,
     rating: 5,
@@ -94,7 +107,8 @@ const products = [
   {
     name: "Light blue women shirt",
     seller: "Trendshop",
-    image: "https://images.unsplash.com/photo-1598554747436-c9293d6a588f?auto=format&fit=crop&w=500&q=80",
+    image:
+      "https://images.unsplash.com/photo-1598554747436-c9293d6a588f?auto=format&fit=crop&w=500&q=80",
     price: 49,
     oldPrice: 69,
     rating: 5,
@@ -103,15 +117,52 @@ const products = [
   {
     name: "Summer fashion top lace",
     seller: "Trendshop",
-    image: "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?auto=format&fit=crop&w=500&q=80",
+    image:
+      "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?auto=format&fit=crop&w=500&q=80",
     price: 65,
     oldPrice: 79,
     rating: 5,
     wishlist: 1,
   },
+
+  // 3 produk tambahan yang muncul saat Load More diklik
+  {
+    name: "Handmade cute handbag",
+    seller: "Admin",
+    image:
+      "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=500&q=80",
+    price: 31,
+    oldPrice: 46.5,
+    rating: 0,
+    wishlist: 0,
+  },
+  {
+    name: "Blanket comfort couch pillow",
+    seller: "Trendshop",
+    image:
+      "https://modesy.codingest.net/uploads/images/202508/img_w480_68b41df6a5b290-34492240.webp",
+    price: 39,
+    rating: 0,
+    wishlist: 0,
+  },
+  {
+    name: "Women casual dress",
+    seller: "Admin",
+    image:
+      "https://modesy.codingest.net/uploads/images/202508/img_w480_68b43a9740e718-26703231.webp",
+    price: 56,
+    rating: 0,
+    wishlist: 0,
+  },
 ];
 
 export default function FeaturedProducts() {
+  const { formatPrice } = useCurrency();
+  const [visibleCount, setVisibleCount] = useState(12);
+
+  const visibleProducts = products.slice(0, visibleCount);
+  const hasMore = visibleCount < products.length;
+
   return (
     <section className="bg-white px-5 pb-10 pt-16 sm:px-6">
       <div className="mb-7 flex items-center justify-between">
@@ -128,7 +179,7 @@ export default function FeaturedProducts() {
       </div>
 
       <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-6">
-        {products.map((product) => (
+        {visibleProducts.map((product) => (
           <article
             key={product.name}
             className="group relative min-w-0 overflow-hidden rounded-md border border-gray-200 bg-white transition hover:shadow-md"
@@ -143,11 +194,11 @@ export default function FeaturedProducts() {
               </div>
             </Link>
 
-            {/* Tombol muncul ketika produk diarahkan */}
+            {/* Tombol keranjang dan wishlist saat hover */}
             <div className="pointer-events-none invisible absolute right-3 top-3 z-10 flex flex-col gap-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
               <button
                 type="button"
-                aria-label="Add to cart"
+                aria-label={`Add ${product.name} to cart`}
                 className="pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full bg-white text-gray-700 shadow-md hover:bg-[#00a99d] hover:text-white"
               >
                 <svg
@@ -169,7 +220,7 @@ export default function FeaturedProducts() {
 
               <button
                 type="button"
-                aria-label="Add to wishlist"
+                aria-label={`Add ${product.name} to wishlist`}
                 className="pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full bg-white text-gray-700 shadow-md hover:bg-[#00a99d] hover:text-white"
               >
                 <svg
@@ -200,7 +251,7 @@ export default function FeaturedProducts() {
                 {product.seller}
               </p>
 
-              <div className="mt-2 flex items-center justify-between">
+              <div className="mt-2 flex items-center justify-between gap-1">
                 <div className="whitespace-nowrap text-base tracking-[-2px]">
                   {Array.from({ length: 5 }, (_, index) => (
                     <span
@@ -216,25 +267,55 @@ export default function FeaturedProducts() {
                   ))}
                 </div>
 
-                <span className="text-sm text-gray-400">♡ 0</span>
+                <span className="text-sm text-gray-400">
+                  ♡ {product.wishlist}
+                </span>
               </div>
 
               <div className="mt-3 flex flex-wrap items-center gap-2">
-                <span className="font-bold text-[#35a853]">
-                  ${product.price}
-                </span>
+                {product.quote ? (
+                  <span className="font-bold text-[#35a853]">
+                    Contact for price
+                  </span>
+                ) : product.free ? (
+                  <span className="font-bold text-[#35a853]">
+                    Free
+                  </span>
+                ) : (
+                  <>
+                    <span
+                      className={`font-bold ${
+                        product.oldPrice
+                          ? "text-[#35a853]"
+                          : "text-[#252525]"
+                      }`}
+                    >
+                      {formatPrice(product.price)}
+                    </span>
 
-                <span className="text-sm text-gray-400 line-through">
-                  ${product.oldPrice}
-                </span>
+                    {product.oldPrice !== undefined && (
+                      <span className="text-sm text-gray-400 line-through">
+                        {formatPrice(product.oldPrice)}
+                      </span>
+                    )}
+                  </>
+                )}
               </div>
             </div>
           </article>
         ))}
-      </div>           
+      </div>
+
+      {/* Load More: menampilkan 3 produk tambahan */}
+      {hasMore && (
         <div className="mt-10 flex justify-center">
           <button
             type="button"
+            onClick={() =>
+              setVisibleCount((current) =>
+                Math.min(current + 3, products.length)
+              )
+            }
             className="inline-flex items-center gap-2 text-base font-normal text-[#252525] transition hover:text-[#00a99d]"
           >
             Load More
@@ -253,6 +334,7 @@ export default function FeaturedProducts() {
             </svg>
           </button>
         </div>
+      )}
     </section>
   );
 }

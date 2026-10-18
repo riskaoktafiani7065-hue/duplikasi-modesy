@@ -6,15 +6,16 @@ export default function MainHeader() {
   return (
     <header className="border-b border-gray-100 bg-white">
       <div className="mx-auto flex min-h-27.5 max-w-330 items-center gap-8 px-6">
+
         {/* Logo */}
         <Link
           href="/"
-          className="shrink-0 text-[38px] font-bold tracking-tight text-[#222222]"
+          className="shrink-0 text-[58px] font-semibold leading-none tracking-[-2px] text-[#484848]"
           aria-label="Modesy Home"
         >
-          modesy<span className="text-[#2563ff]">.</span>
+          M<span className="text-[#00a99d]">o</span>desy
         </Link>
-
+      
         {/* Search */}
         <form
           action="/products"

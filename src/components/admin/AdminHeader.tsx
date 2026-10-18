@@ -1,6 +1,8 @@
 "use client";
 
 import { Bell, ChevronDown, Globe, Menu } from "lucide-react";
+import { useModesySettings } from "@/lib/modesy-settings";
+import { languageNames } from "@/lib/i18n";
 
 export default function AdminHeader({
   email,
@@ -9,12 +11,14 @@ export default function AdminHeader({
   email: string;
   onMenuClick: () => void;
 }) {
+  const { language, t } = useModesySettings();
+
   return (
     <header className="admin-topbar sticky top-0 z-30 flex h-[61px] items-center justify-between border-b border-gray-200 bg-white px-4 sm:px-6">
       <button
         type="button"
         onClick={onMenuClick}
-        aria-label="Buka atau tutup sidebar"
+        aria-label={t("Toggle sidebar")}
         className="flex size-9 items-center justify-center text-gray-500 transition hover:text-gray-900"
       >
         <Menu size={20} />
@@ -28,7 +32,7 @@ export default function AdminHeader({
           className="flex items-center gap-1.5 rounded-sm bg-[#00a88f] px-3 py-2 text-[11px] font-semibold text-white hover:bg-[#008f7a]"
         >
           <Globe size={12} />
-          View Site
+          {t("View Site")}
         </a>
 
         <button
@@ -36,13 +40,13 @@ export default function AdminHeader({
           className="hidden items-center gap-1 text-xs text-gray-500 sm:flex"
         >
           <Globe size={14} />
-          English
+          {languageNames[language]}
           <ChevronDown size={12} />
         </button>
 
         <button
           type="button"
-          aria-label="Notifikasi"
+          aria-label={t("Notifications")}
           className="relative flex size-9 items-center justify-center text-gray-500 hover:text-gray-900"
         >
           <Bell size={17} />
@@ -55,7 +59,7 @@ export default function AdminHeader({
           </div>
 
           <div className="hidden min-w-0 sm:block">
-            <p className="text-xs font-semibold text-gray-500">Admin</p>
+            <p className="text-xs font-semibold text-gray-500">{t("Admin")}</p>
           </div>
 
           <ChevronDown size={12} className="text-gray-400" />

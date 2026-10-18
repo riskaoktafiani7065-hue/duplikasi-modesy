@@ -2,6 +2,8 @@
 import { createClient } from "@/lib/supabase/server";
 import RoleBadge from "@/components/admin/RoleBadge";
 import { Users as UsersIcon, Eye } from "lucide-react";
+import { createTranslator } from "@/lib/i18n";
+import { getServerLanguage } from "@/lib/i18n-server";
 
 type SearchParams = Promise<{ role?: string; q?: string }>;
 
@@ -11,6 +13,9 @@ export default async function AdminUsersPage({
   searchParams: SearchParams;
 }) {
   const params = await searchParams;
+  const lang = await getServerLanguage();
+  const t = createTranslator(lang);
+  const locale = lang === "ar" ? "ar-EG" : "id-ID";
   const roleFilter = params.role ?? "ALL";
   const query = params.q ?? "";
 
@@ -39,9 +44,9 @@ export default async function AdminUsersPage({
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">Users</h1>
+        <h1 className="text-3xl font-bold text-gray-900">{t("Users")}</h1>
         <p className="mt-1 text-sm text-gray-500">
-          Kelola semua user terdaftar
+          {t("Kelola semua user terdaftar")}
         </p>
       </div>
 
@@ -58,7 +63,7 @@ export default async function AdminUsersPage({
                   : "border-gray-200 bg-white text-gray-700 hover:border-[#00a99d]/40"
               }`}
             >
-              {r}
+              {t(r)}
             </Link>
           ))}
         </div>
@@ -68,14 +73,14 @@ export default async function AdminUsersPage({
             type="search"
             name="q"
             defaultValue={query}
-            placeholder="Cari nama atau email..."
+            placeholder={t("Cari nama atau email...")}
             className="rounded-lg border border-gray-200 px-4 py-2 text-sm outline-none focus:border-[#00a99d]"
           />
           <button
             type="submit"
             className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-gray-700"
           >
-            Cari
+            {t("Cari")}
           </button>
         </form>
       </div>
@@ -88,19 +93,19 @@ export default async function AdminUsersPage({
               <thead className="border-b border-gray-200 bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left font-semibold text-gray-600">
-                    User
+                    {t("User")}
                   </th>
                   <th className="px-6 py-3 text-left font-semibold text-gray-600">
-                    Email
+                    {t("Email")}
                   </th>
                   <th className="px-6 py-3 text-left font-semibold text-gray-600">
-                    Role
+                    {t("Role")}
                   </th>
                   <th className="px-6 py-3 text-left font-semibold text-gray-600">
-                    Bergabung
+                    {t("Bergabung")}
                   </th>
                   <th className="px-6 py-3 text-right font-semibold text-gray-600">
-                    Aksi
+                    {t("Aksi")}
                   </th>
                 </tr>
               </thead>
@@ -130,7 +135,7 @@ export default async function AdminUsersPage({
                       <RoleBadge role={u.role} />
                     </td>
                     <td className="px-6 py-4 text-xs text-gray-500">
-                      {new Date(u.created_at).toLocaleDateString("id-ID")}
+                      {new Date(u.created_at).toLocaleDateString(locale)}
                     </td>
                     <td className="px-6 py-4 text-right">
                       <Link
@@ -138,7 +143,7 @@ export default async function AdminUsersPage({
                         className="inline-flex items-center gap-1 rounded-lg bg-gray-100 px-3 py-1.5 text-xs font-semibold text-gray-700 transition hover:bg-gray-200"
                       >
                         <Eye size={14} />
-                        Detail
+                        {t("Detail")}
                       </Link>
                     </td>
                   </tr>
@@ -150,7 +155,7 @@ export default async function AdminUsersPage({
           <div className="py-16 text-center">
             <UsersIcon size={40} className="mx-auto text-gray-300" />
             <p className="mt-3 text-sm text-gray-500">
-              Nggak ada user di filter ini
+              {t("Nggak ada user di filter ini")}
             </p>
           </div>
         )}

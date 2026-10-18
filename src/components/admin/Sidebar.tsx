@@ -39,6 +39,7 @@ import {
   X,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { useModesySettings } from "@/lib/modesy-settings";
 
 type MenuChild = {
   label: string;
@@ -173,6 +174,7 @@ export default function AdminSidebar({
   collapsed = false,
   onClose,
 }: Props) {
+  const { t } = useModesySettings();
   const pathname = usePathname();
   const router = useRouter();
   const supabase = useMemo(() => createClient(), []);
@@ -249,7 +251,7 @@ export default function AdminSidebar({
     user?.user_metadata?.name ||
     user?.user_metadata?.full_name ||
     user?.email?.split("@")[0] ||
-    "Admin";
+    t("Admin");
 
   const initial = displayName.charAt(0).toUpperCase();
 
@@ -264,7 +266,7 @@ export default function AdminSidebar({
       {isOpen && (
         <button
           type="button"
-          aria-label="Tutup menu navigasi"
+          aria-label={t("Close navigation menu")}
           className="fixed inset-0 z-40 bg-black/50 lg:hidden"
           onClick={handleClose}
         />
@@ -282,12 +284,12 @@ export default function AdminSidebar({
             onClick={handleClose}
             className="text-[17px] font-semibold tracking-[0.2px]"
           >
-            Modesy <span className="font-normal text-slate-300">Panel</span>
+            Modesy <span className="font-normal text-slate-300">{t("Panel")}</span>
           </Link>
 
           <button
             type="button"
-            aria-label="Tutup sidebar"
+            aria-label={t("Close sidebar")}
             onClick={handleClose}
             className="absolute right-3 rounded p-1 text-slate-400 hover:bg-white/10 lg:hidden"
           >
@@ -307,7 +309,7 @@ export default function AdminSidebar({
             </p>
             <p className="mt-1.5 flex items-center gap-1.5 text-[11px] text-slate-400">
               <span className="size-[7px] rounded-full bg-[#19c99a]" />
-              Online
+              {t("Online")}
             </p>
           </div>
         </div>
@@ -317,7 +319,7 @@ export default function AdminSidebar({
           {groups.map((group) => (
             <section key={group.title} className="mb-2">
               <p className="px-5 pb-2 pt-4 text-[10px] tracking-[0.15em] text-[#94a2b4]">
-                {group.title}
+                {t(group.title)}
               </p>
 
               {group.items.map((item) => {
@@ -348,7 +350,7 @@ export default function AdminSidebar({
                           className={linkClass}
                         >
                           <Icon size={16} strokeWidth={1.7} />
-                          <span className="min-w-0 flex-1">{item.label}</span>
+                          <span className="min-w-0 flex-1">{t(item.label)}</span>
                           {expanded ? (
                             <ChevronDown size={14} />
                           ) : (
@@ -373,7 +375,7 @@ export default function AdminSidebar({
                                       : "text-[#b4bfcc] hover:bg-white/[0.05] hover:text-white"
                                   }`}
                                 >
-                                  {child.label}
+                                  {t(child.label)}
                                 </Link>
                               );
                             })}
@@ -387,7 +389,7 @@ export default function AdminSidebar({
                         className={linkClass}
                       >
                         <Icon size={16} strokeWidth={1.7} />
-                        <span>{item.label}</span>
+                        <span>{t(item.label)}</span>
                       </Link>
                     )}
                   </div>
@@ -406,7 +408,7 @@ export default function AdminSidebar({
             className="mb-1 flex min-h-10 items-center gap-3 rounded-sm px-4 text-[12px] text-[#c0cad6] transition-colors hover:bg-white/[0.06] hover:text-white"
           >
             <Globe size={16} strokeWidth={1.7} />
-            <span>View Site</span>
+            <span>{t("View Site")}</span>
           </Link>
 
           <button
@@ -416,7 +418,7 @@ export default function AdminSidebar({
             className="flex min-h-10 w-full items-center gap-3 rounded-sm px-4 text-left text-[12px] text-[#c0cad6] transition-colors hover:bg-red-500/10 hover:text-red-300 disabled:opacity-50"
           >
             <LogOut size={16} strokeWidth={1.7} />
-            <span>{loggingOut ? "Logging out..." : "Logout"}</span>
+            <span>{loggingOut ? t("Logging out...") : t("Logout")}</span>
           </button>
         </div>
       </aside>

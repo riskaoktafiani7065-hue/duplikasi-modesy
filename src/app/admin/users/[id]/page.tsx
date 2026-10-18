@@ -4,6 +4,8 @@ import { ArrowLeft, Mail, Calendar, Shield } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import RoleBadge from "@/components/admin/RoleBadge";
 import UserRoleForm from "@/components/admin/UserRoleForm";
+import { createTranslator } from "@/lib/i18n";
+import { getServerLanguage } from "@/lib/i18n-server";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -11,6 +13,9 @@ type Props = {
 
 export default async function AdminUserDetailPage({ params }: Props) {
   const { id } = await params;
+  const lang = await getServerLanguage();
+  const t = createTranslator(lang);
+  const locale = lang === "ar" ? "ar-EG" : "id-ID";
   const supabase = await createClient();
 
   const { data: user } = await supabase
@@ -37,7 +42,7 @@ export default async function AdminUserDetailPage({ params }: Props) {
           className="inline-flex items-center gap-1 text-sm text-gray-500 transition hover:text-[#00a99d]"
         >
           <ArrowLeft size={16} />
-          Kembali ke Users
+          {t("Kembali ke Users")}
         </Link>
         <div className="mt-3 flex flex-wrap items-center justify-between gap-4">
           <div>
@@ -61,25 +66,25 @@ export default async function AdminUserDetailPage({ params }: Props) {
           <div className="rounded-2xl border border-gray-200 bg-white p-6">
             <h2 className="mb-4 flex items-center gap-2 text-sm font-bold text-gray-900">
               <Shield size={16} />
-              Informasi Akun
+              {t("Informasi Akun")}
             </h2>
             <dl className="space-y-3 text-sm">
               <div className="flex justify-between">
-                <dt className="text-gray-500">User ID</dt>
+                <dt className="text-gray-500">{t("User ID")}</dt>
                 <dd className="font-mono text-xs text-gray-700">{user.id}</dd>
               </div>
               <div className="flex justify-between">
                 <dt className="flex items-center gap-1 text-gray-500">
-                  <Mail size={14} /> Email
+                  <Mail size={14} /> {t("Email")}
                 </dt>
                 <dd className="font-medium text-gray-900">{user.email}</dd>
               </div>
               <div className="flex justify-between">
                 <dt className="flex items-center gap-1 text-gray-500">
-                  <Calendar size={14} /> Bergabung
+                  <Calendar size={14} /> {t("Bergabung")}
                 </dt>
                 <dd className="font-medium text-gray-900">
-                  {new Date(user.created_at).toLocaleDateString("id-ID", {
+                  {new Date(user.created_at).toLocaleDateString(locale, {
                     day: "numeric",
                     month: "long",
                     year: "numeric",
@@ -93,37 +98,37 @@ export default async function AdminUserDetailPage({ params }: Props) {
           {vendor && (
             <div className="rounded-2xl border border-gray-200 bg-white p-6">
               <h2 className="mb-4 text-sm font-bold text-gray-900">
-                Info Vendor
+                {t("Info Vendor")}
               </h2>
               <dl className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <dt className="text-gray-500">Nama Toko</dt>
+                  <dt className="text-gray-500">{t("Nama Toko")}</dt>
                   <dd className="font-medium text-gray-900">
                     {vendor.shop_name}
                   </dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-gray-500">Slug</dt>
+                  <dt className="text-gray-500">{t("Slug")}</dt>
                   <dd className="font-mono text-xs text-gray-700">
                     {vendor.slug}
                   </dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-gray-500">Saldo</dt>
+                  <dt className="text-gray-500">{t("Saldo")}</dt>
                   <dd className="font-medium text-gray-900">
                     Rp {Number(vendor.balance).toLocaleString("id-ID")}
                   </dd>
                 </div>
                 <div className="flex justify-between">
-                  <dt className="text-gray-500">Status</dt>
+                  <dt className="text-gray-500">{t("Status")}</dt>
                   <dd>
                     {vendor.is_verified ? (
                       <span className="text-green-600 font-semibold">
-                        Terverifikasi
+                        {t("Terverifikasi")}
                       </span>
                     ) : (
                       <span className="text-yellow-600 font-semibold">
-                        Belum Verifikasi
+                        {t("Belum Verifikasi")}
                       </span>
                     )}
                   </dd>
@@ -137,7 +142,7 @@ export default async function AdminUserDetailPage({ params }: Props) {
         <div className="space-y-4">
           <div className="rounded-2xl border border-gray-200 bg-white p-6">
             <h2 className="mb-4 text-sm font-bold text-gray-900">
-              Edit Role
+              {t("Edit Role")}
             </h2>
             <UserRoleForm userId={user.id} currentRole={user.role} />
           </div>

@@ -1,5 +1,7 @@
+"use client";
 
 import Link from "next/link";
+import { useModesySettings } from "@/lib/modesy-settings";
 
 const categories = [
   "Clothing",
@@ -29,6 +31,8 @@ const socialLinks = [
 ];
 
 export default function Footer() {
+  const { t } = useModesySettings();
+
   return (
     <footer className="mt-12 bg-[#fafafd] text-[#222]">
       {/* Bagian utama footer */}
@@ -42,10 +46,7 @@ export default function Footer() {
           </Link>
 
           <p className="mt-5 text-base leading-8 text-[#666]">
-            Modesy is a modern e-commerce marketplace where buyers and
-            sellers connect with ease. Whether you are looking to shop
-            for unique items or grow your business by selling online,
-            Modesy is here to help you every step of the way.
+            {t("Modesy is a modern e-commerce marketplace where buyers and sellers connect with ease. Whether you are looking to shop for unique items or grow your business by selling online, Modesy is here to help you every step of the way.")}
           </p>
 
           {/* Social media */}
@@ -54,7 +55,7 @@ export default function Footer() {
               <a
                 key={social.name}
                 href="#"
-                aria-label={social.name}
+                aria-label={t(social.name)}
                 className="flex h-12.75 w-12.75 items-center justify-center rounded-full border border-gray-300 text-lg font-semibold text-[#777] transition hover:border-[#00a99d] hover:bg-[#00a99d] hover:text-white"
               >
                 {social.icon}
@@ -65,7 +66,7 @@ export default function Footer() {
 
         {/* Kategori */}
         <div>
-          <h3 className="mb-6 text-xl font-medium">CATEGORIES</h3>
+          <h3 className="mb-6 text-xl font-medium">{t("CATEGORIES")}</h3>
 
           <ul className="space-y-4">
             {categories.map((category) => (
@@ -74,7 +75,7 @@ export default function Footer() {
                   href="/products"
                   className="text-base text-[#333] transition hover:text-[#00a99d]"
                 >
-                  {category}
+                  {t(category)}
                 </Link>
               </li>
             ))}
@@ -83,7 +84,7 @@ export default function Footer() {
 
         {/* Quick links dan information */}
         <div>
-          <h3 className="mb-6 text-xl font-medium">QUICK LINKS</h3>
+          <h3 className="mb-6 text-xl font-medium">{t("QUICK LINKS")}</h3>
 
           <ul className="space-y-4">
             {[
@@ -97,13 +98,13 @@ export default function Footer() {
                   href={item.href}
                   className="text-base text-[#333] transition hover:text-[#00a99d]"
                 >
-                  {item.name}
+                  {t(item.name)}
                 </Link>
               </li>
             ))}
           </ul>
 
-          <h3 className="mb-6 mt-10 text-xl font-medium">INFORMATION</h3>
+          <h3 className="mb-6 mt-10 text-xl font-medium">{t("INFORMATION")}</h3>
 
           <ul className="space-y-4">
             <li>
@@ -111,7 +112,7 @@ export default function Footer() {
                 href="/terms"
                 className="text-base text-[#333] transition hover:text-[#00a99d]"
               >
-                Terms &amp; Conditions
+                {t("Terms & Conditions")}
               </Link>
             </li>
             <li>
@@ -119,7 +120,7 @@ export default function Footer() {
                 href="/about"
                 className="text-base text-[#333] transition hover:text-[#00a99d]"
               >
-                About Us
+                {t("About Us")}
               </Link>
             </li>
           </ul>
@@ -127,18 +128,17 @@ export default function Footer() {
 
         {/* Newsletter */}
         <div>
-          <h3 className="mb-6 text-xl font-medium">NEWSLETTER</h3>
+          <h3 className="mb-6 text-xl font-medium">{t("NEWSLETTER")}</h3>
 
           <p className="text-base leading-8 text-[#666]">
-            Join our subscribers list to get the latest news, updates
-            and special offers directly in your inbox
+            {t("Join our subscribers list to get the latest news, updates and special offers directly in your inbox")}
           </p>
 
           <form className="mt-5 space-y-3">
             <input
               type="email"
-              placeholder="Enter your email"
-              aria-label="Your email address"
+              placeholder={t("Enter your email")}
+              aria-label={t("Your email address")}
               required
               className="h-15.5 w-full rounded border border-gray-200 bg-white px-6 text-base outline-none transition focus:border-[#00a99d]"
             />
@@ -147,7 +147,7 @@ export default function Footer() {
               type="submit"
               className="h-15.5 w-full rounded bg-[#00a99d] text-lg text-white transition hover:bg-[#008f85]"
             >
-              Subscribe
+              {t("Subscribe")}
             </button>
           </form>
 
@@ -179,15 +179,15 @@ export default function Footer() {
 
       {/* Copyright */}
       <div className="mx-5 flex flex-col gap-4 border-t border-gray-200 py-6 text-sm text-[#666] sm:mx-8 sm:flex-row sm:items-center sm:justify-between lg:mx-5">
-        <p>Copyright 2025 Modesy - All Rights Reserved.</p>
+        <p>{t("Copyright 2025 Modesy - All Rights Reserved.")}</p>
 
         <div className="flex flex-wrap gap-5">
           <Link href="/privacy" className="hover:text-[#00a99d]">
-            Privacy Policy
+            {t("Privacy Policy")}
           </Link>
 
           <Link href="/cookies" className="hover:text-[#00a99d]">
-            Cookie Policy
+            {t("Cookie Policy")}
           </Link>
         </div>
       </div>

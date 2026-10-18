@@ -1,5 +1,7 @@
+"use client";
 
 import Link from "next/link";
+import { useModesySettings } from "@/lib/modesy-settings";
 
 const categories = [
   {
@@ -77,18 +79,20 @@ const categories = [
 ];
 
 export default function ShopByCategory() {
+  const { t } = useModesySettings();
+
   return (
     <section className="bg-white px-5 py-10 sm:px-8 lg:px-5 lg:py-12">
       <div className="mb-7 flex items-center justify-between">
         <h2 className="text-2xl font-bold text-[#252525] sm:text-3xl">
-          Shop By Category
+          {t("Shop By Category")}
         </h2>
 
         <Link
           href="/products"
           className="flex items-center gap-2 text-base text-[#222] transition hover:text-[#66ccf5] sm:text-lg"
         >
-          View All <span aria-hidden="true">⟶</span>
+          {t("View All")} <span aria-hidden="true">{t("⟶")}</span>
         </Link>
       </div>
 
@@ -102,13 +106,13 @@ export default function ShopByCategory() {
             <div className="aspect-square w-full max-w-61.25 overflow-hidden rounded-full bg-gray-100">
               <img
                 src={category.image}
-                alt={category.name}
+                alt={t(category.name)}
                 className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
               />
             </div>
 
             <h3 className="mt-4 text-sm font-medium text-[#222] transition group-hover:text-[#6ce2f9] sm:text-base lg:text-lg">
-              {category.name}
+              {t(category.name)}
             </h3>
           </Link>
         ))}

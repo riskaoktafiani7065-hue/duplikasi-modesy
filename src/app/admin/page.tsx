@@ -1,5 +1,7 @@
 ﻿import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { createTranslator } from "@/lib/i18n";
+import { getServerLanguage } from "@/lib/i18n-server";
 import {
   Package,
   Users,
@@ -23,10 +25,12 @@ function Panel({
   title,
   children,
   href,
+  viewAll,
 }: {
   title: string;
   children: React.ReactNode;
   href?: string;
+  viewAll?: string;
 }) {
   return (
     <section className="admin-card min-w-0 overflow-hidden rounded-[3px] bg-white">
@@ -37,7 +41,7 @@ function Panel({
             href={href}
             className="flex items-center gap-1 text-[10px] text-[#00a88f] hover:underline"
           >
-            View All <ArrowRight size={12} />
+            {viewAll} <ArrowRight size={12} />
           </Link>
         )}
       </div>
@@ -63,6 +67,9 @@ function EmptyRow({
 }
 
 export default async function AdminDashboardPage() {
+  const lang = await getServerLanguage();
+  const t = createTranslator(lang);
+  const locale = lang === "ar" ? "ar-EG" : "id-ID";
   const supabase = await createClient();
 
   const [
@@ -123,25 +130,25 @@ export default async function AdminDashboardPage() {
 
   const stats = [
     {
-      label: "Orders",
+      label: t("Orders"),
       value: String(totalOrders),
       icon: ShoppingBag,
       color: "#00a88f",
     },
     {
-      label: "Products",
+      label: t("Products"),
       value: String(totalProducts),
       icon: Package,
       color: "#6960a8",
     },
     {
-      label: "Pending Products",
+      label: t("Pending Products"),
       value: String(pendingProducts),
       icon: Eye,
       color: "#ff393f",
     },
     {
-      label: "Members",
+      label: t("Members"),
       value: String(totalUsers),
       icon: Users,
       color: "#ffa936",
@@ -153,13 +160,13 @@ export default async function AdminDashboardPage() {
       {/* Dashboard heading */}
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-xl font-semibold text-[#394553]">Dashboard</h1>
+          <h1 className="text-xl font-semibold text-[#394553]">{t("Dashboard")}</h1>
           <p className="mt-1 text-[11px] text-gray-500">
-            Welcome to your marketplace control panel.
+            {t("Welcome to your marketplace control panel.")}
           </p>
         </div>
         <p className="text-[10px] text-gray-400">
-          Home <span className="mx-1">/</span> Dashboard
+          {t("Home")} <span className="mx-1">/</span> {t("Dashboard")}
         </p>
       </div>
 
@@ -170,8 +177,7 @@ export default async function AdminDashboardPage() {
           className="flex items-center justify-between gap-3 border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800"
         >
           <span>
-            <strong>{pendingProducts}</strong> products are waiting for
-            moderation.
+            <strong>{pendingProducts}</strong> {t("products are waiting for moderation.")}
           </span>
           <ArrowRight size={15} />
         </Link>
@@ -207,16 +213,16 @@ export default async function AdminDashboardPage() {
 
       {/* Orders and transactions */}
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
-        <Panel title="Latest Orders" href="/admin/orders">
+        <Panel title={t("Latest Orders")} viewAll={t("View All")} href="/admin/orders">
           <div className="max-h-[310px] overflow-auto">
             <table className="admin-table">
               <thead>
                 <tr>
-                  <th>Order</th>
-                  <th>Total</th>
-                  <th>Status</th>
-                  <th>Date</th>
-                  <th>Details</th>
+                  <th>{t("Order")}</th>
+                  <th>{t("Total")}</th>
+                  <th>{t("Status")}</th>
+                  <th>{t("Date")}</th>
+                  <th>{t("Details")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -231,12 +237,12 @@ export default async function AdminDashboardPage() {
                       </td>
                       <td>
                         <span className="admin-badge bg-amber-50 text-amber-700">
-                          {order.status ?? "Unknown"}
+                          {order.status ?? t("Unknown")}
                         </span>
                       </td>
                       <td className="whitespace-nowrap text-gray-500">
                         {order.created_at
-                          ? new Date(order.created_at).toLocaleString("id-ID", {
+                          ? new Date(order.created_at).toLocaleString(locale, {
                               dateStyle: "short",
                               timeStyle: "short",
                             })
@@ -245,33 +251,33 @@ export default async function AdminDashboardPage() {
                       <td>
                         <Link
                           href={`/admin/orders/${order.id}`}
-                          aria-label="Lihat pesanan"
+                          aria-label={t("Lihat pesanan")}
                           className="inline-flex rounded bg-[#00b6c4] px-2 py-1 text-[10px] text-white"
                         >
-                          Details
+                          {t("Details")}
                         </Link>
                       </td>
                     </tr>
                   ))
                 ) : (
-                  <EmptyRow colSpan={5}>Belum ada data pesanan.</EmptyRow>
+                  <EmptyRow colSpan={5}>{t("Belum ada data pesanan.")}</EmptyRow>
                 )}
               </tbody>
             </table>
           </div>
         </Panel>
 
-        <Panel title="Latest Transactions" href="/admin/payments">
+        <Panel title={t("Latest Transactions")} viewAll={t("View All")} href="/admin/payments">
           <div className="max-h-[310px] overflow-auto">
             <table className="admin-table">
               <thead>
                 <tr>
-                  <th>Id</th>
-                  <th>Order</th>
-                  <th>Payment Amount</th>
-                  <th>Payment Method</th>
-                  <th>Status</th>
-                  <th>Date</th>
+                  <th>{t("Id")}</th>
+                  <th>{t("Order")}</th>
+                  <th>{t("Payment Amount")}</th>
+                  <th>{t("Payment Method")}</th>
+                  <th>{t("Status")}</th>
+                  <th>{t("Date")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -283,23 +289,23 @@ export default async function AdminDashboardPage() {
                       <td className="whitespace-nowrap">
                         {currency(Number(order.total ?? 0))}
                       </td>
-                      <td>Order payment</td>
+                      <td>{t("Order payment")}</td>
                       <td>
                         <span className="admin-badge bg-emerald-50 text-emerald-700">
-                          {order.status ?? "Unknown"}
+                          {order.status ?? t("Unknown")}
                         </span>
                       </td>
                       <td className="whitespace-nowrap">
                         {order.created_at
                           ? new Date(order.created_at).toLocaleDateString(
-                              "id-ID",
+                              locale,
                             )
                           : "—"}
                       </td>
                     </tr>
                   ))
                 ) : (
-                  <EmptyRow colSpan={6}>Belum ada transaksi.</EmptyRow>
+                  <EmptyRow colSpan={6}>{t("Belum ada transaksi.")}</EmptyRow>
                 )}
               </tbody>
             </table>
@@ -307,15 +313,15 @@ export default async function AdminDashboardPage() {
         </Panel>
 
         {/* Products */}
-        <Panel title="Latest Products" href="/admin/products">
+        <Panel title={t("Latest Products")} viewAll={t("View All")} href="/admin/products">
           <div className="max-h-[310px] overflow-auto">
             <table className="admin-table">
               <thead>
                 <tr>
-                  <th>ID</th>
-                  <th>Product</th>
-                  <th>Status</th>
-                  <th>Details</th>
+                  <th>{t("ID")}</th>
+                  <th>{t("Product")}</th>
+                  <th>{t("Status")}</th>
+                  <th>{t("Details")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -336,13 +342,13 @@ export default async function AdminDashboardPage() {
                           href={`/admin/products/${product.id}`}
                           className="rounded bg-[#00b6c4] px-2 py-1 text-[10px] text-white"
                         >
-                          Details
+                          {t("Details")}
                         </Link>
                       </td>
                     </tr>
                   ))
                 ) : (
-                  <EmptyRow colSpan={4}>Produk belum tersedia.</EmptyRow>
+                  <EmptyRow colSpan={4}>{t("Produk belum tersedia.")}</EmptyRow>
                 )}
               </tbody>
             </table>
@@ -351,7 +357,7 @@ export default async function AdminDashboardPage() {
 
         {/* Pending products */}
         <Panel
-          title="Latest Pending Products"
+          title={t("Latest Pending Products")} viewAll={t("View All")}
           href="/admin/products?status=PENDING"
         >
           <div className="flex min-h-36 flex-col items-center justify-center text-center">
@@ -359,44 +365,44 @@ export default async function AdminDashboardPage() {
               <Clock size={19} />
             </div>
             <p className="text-sm font-semibold text-gray-700">
-              {pendingProducts} pending products
+              {pendingProducts} {t("pending products")}
             </p>
             <p className="mt-1 text-[10px] text-gray-400">
-              Products awaiting admin review
+              {t("Products awaiting admin review")}
             </p>
             <Link
               href="/admin/products?status=PENDING"
               className="mt-3 rounded bg-[#00b6a0] px-3 py-2 text-[10px] text-white"
             >
-              View All
+              {t("View All")}
             </Link>
           </div>
         </Panel>
 
         {/* Reviews */}
-        <Panel title="Latest Reviews" href="/admin/reviews">
+        <Panel title={t("Latest Reviews")} viewAll={t("View All")} href="/admin/reviews">
           <div className="flex min-h-24 flex-col items-center justify-center text-center">
             <Star size={22} className="mb-2 text-amber-400" />
-            <p className="text-xs font-medium text-gray-600">Reviews panel</p>
+            <p className="text-xs font-medium text-gray-600">{t("Reviews panel")}</p>
             <p className="mt-1 text-[10px] text-gray-400">
-              Data ulasan belum dihubungkan.
+              {t("Data ulasan belum dihubungkan.")}
             </p>
           </div>
         </Panel>
 
         {/* Comments */}
-        <Panel title="Latest Comments" href="/admin/comments">
+        <Panel title={t("Latest Comments")} viewAll={t("View All")} href="/admin/comments">
           <div className="flex min-h-24 flex-col items-center justify-center text-center">
             <MessageSquare size={22} className="mb-2 text-gray-300" />
-            <p className="text-xs font-medium text-gray-600">Comments panel</p>
+            <p className="text-xs font-medium text-gray-600">{t("Comments panel")}</p>
             <p className="mt-1 text-[10px] text-gray-400">
-              Data komentar belum dihubungkan.
+              {t("Data komentar belum dihubungkan.")}
             </p>
           </div>
         </Panel>
 
         {/* Members */}
-        <Panel title="Latest Members" href="/admin/users">
+        <Panel title={t("Latest Members")} viewAll={t("View All")} href="/admin/users">
           <div className="grid grid-cols-3 gap-4 sm:grid-cols-6">
             {latestMembers.length ? (
               latestMembers.map((member) => (
@@ -408,29 +414,29 @@ export default async function AdminDashboardPage() {
                     <Users size={19} />
                   </div>
                   <p className="mt-2 w-full truncate text-center text-[10px] text-gray-600">
-                    {member.name || "Member"}
+                    {member.name || t("Member")}
                   </p>
                   <p className="mt-1 text-[9px] text-gray-400">
-                    {member.role || "User"}
+                    {member.role || t("User")}
                   </p>
                 </div>
               ))
             ) : (
               <p className="col-span-full py-5 text-center text-xs text-gray-400">
-                Belum ada data anggota.
+                {t("Belum ada data anggota.")}
               </p>
             )}
           </div>
         </Panel>
 
         {/* Revenue */}
-        <Panel title="Revenue Summary">
+        <Panel title={t("Revenue Summary")}>
           <div className="flex min-h-24 items-center gap-4">
             <div className="flex size-12 items-center justify-center rounded bg-emerald-50 text-emerald-600">
               <CreditCard size={22} />
             </div>
             <div>
-              <p className="text-xs text-gray-500">Paid & completed orders</p>
+              <p className="text-xs text-gray-500">{t("Paid & completed orders")}</p>
               <p className="mt-1 text-xl font-semibold text-gray-800">
                 {currency(totalRevenue)}
               </p>

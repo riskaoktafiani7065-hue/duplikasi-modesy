@@ -494,3 +494,9 @@ body.admin-sidebar-collapsed .admin-main {
   }
 }
 
+
+
+/* Font Arab untuk mode bahasa Arab */
+html[lang="ar"] body {
+  font-family: var(--font-arabic), Arial, Helvetica, sans-serif;
+}

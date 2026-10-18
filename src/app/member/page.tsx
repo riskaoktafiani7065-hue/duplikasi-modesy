@@ -1,3 +1,5 @@
+import { createTranslator } from "@/lib/i18n";
+import { getServerLanguage } from "@/lib/i18n-server";
 
 const stats = [
   {
@@ -27,7 +29,10 @@ const menuItems = [
   { label: "Wishlist", href: "/member/wishlist", icon: "♡", active: false },
 ];
 
-export default function MemberDashboard() {
+export default async function MemberDashboard() {
+  const lang = await getServerLanguage();
+  const t = createTranslator(lang);
+
   return (
     <main className="min-h-screen bg-slate-50 text-slate-800">
       <header className="border-b border-slate-200 bg-white">
@@ -40,7 +45,7 @@ export default function MemberDashboard() {
             href="/"
             className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium transition hover:bg-slate-50"
           >
-            ← Back to Shop
+            {t("← Back to Shop")}
           </a>
         </div>
       </header>
@@ -48,20 +53,20 @@ export default function MemberDashboard() {
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8">
           <p className="text-sm font-medium text-emerald-600">
-            MEMBER AREA
+            {t("MEMBER AREA")}
           </p>
           <h1 className="mt-2 text-2xl font-bold sm:text-3xl">
-            My Dashboard
+            {t("My Dashboard")}
           </h1>
           <p className="mt-2 text-sm text-slate-500">
-            Manage your profile, orders, and favorite products.
+            {t("Manage your profile, orders, and favorite products.")}
           </p>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-[240px_1fr]">
           <aside className="h-fit rounded-2xl border border-slate-200 bg-white p-4">
             <p className="mb-4 px-3 text-xs font-semibold uppercase tracking-wider text-slate-400">
-              Account Menu
+              {t("Account Menu")}
             </p>
 
             <nav className="space-y-1">
@@ -77,16 +82,16 @@ export default function MemberDashboard() {
                   }`}
                 >
                   <span className="text-lg">{item.icon}</span>
-                  {item.label}
+                  {t(item.label)}
                 </a>
               ))}
             </nav>
 
             <div className="mt-6 border-t border-slate-100 pt-4">
               <p className="px-3 text-xs leading-5 text-slate-400">
-                Member account
+                {t("Member account")}
                 <br />
-                Demo interface
+                {t("Demo interface")}
               </p>
             </div>
           </aside>
@@ -94,20 +99,19 @@ export default function MemberDashboard() {
           <section className="min-w-0 space-y-6">
             <div className="rounded-2xl bg-slate-900 p-6 text-white sm:p-8">
               <p className="text-sm text-slate-300">
-                Welcome back!
+                {t("Welcome back!")}
               </p>
               <h2 className="mt-2 text-2xl font-bold">
-                Hello, Member 👋
+                {t("Hello, Member 👋")}
               </h2>
               <p className="mt-3 max-w-lg text-sm leading-6 text-slate-300">
-                Welcome to your personal dashboard. Track your orders
-                and keep your favorite products organized in one place.
+                {t("Welcome to your personal dashboard. Track your orders and keep your favorite products organized in one place.")}
               </p>
               <a
                 href="/"
                 className="mt-5 inline-flex rounded-lg bg-emerald-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-600"
               >
-                Explore Products
+                {t("Explore Products")}
               </a>
             </div>
 
@@ -119,7 +123,7 @@ export default function MemberDashboard() {
                 >
                   <div className="flex items-center justify-between">
                     <p className="text-sm text-slate-500">
-                      {stat.label}
+                      {t(stat.label)}
                     </p>
                     <span
                       className={`flex h-10 w-10 items-center justify-center rounded-xl text-xl ${stat.color}`}
@@ -135,24 +139,24 @@ export default function MemberDashboard() {
             <div className="rounded-2xl border border-slate-200 bg-white p-6">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <h2 className="font-bold">Recent Orders</h2>
+                  <h2 className="font-bold">{t("Recent Orders")}</h2>
                   <p className="mt-1 text-sm text-slate-500">
-                    Your latest purchases will appear here.
+                    {t("Your latest purchases will appear here.")}
                   </p>
                 </div>
                 <a
                   href="/member/orders"
                   className="text-sm font-semibold text-emerald-600 hover:text-emerald-700"
                 >
-                  View All →
+                  {t("View All →")}
                 </a>
               </div>
 
               <div className="mt-6 rounded-xl border border-dashed border-slate-200 px-4 py-10 text-center">
                 <span className="text-3xl">📦</span>
-                <p className="mt-3 font-medium">No orders yet</p>
+                <p className="mt-3 font-medium">{t("No orders yet")}</p>
                 <p className="mt-1 text-sm text-slate-500">
-                  Your order history will appear here.
+                  {t("Your order history will appear here.")}
                 </p>
               </div>
             </div>

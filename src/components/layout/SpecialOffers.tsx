@@ -1,5 +1,8 @@
 
+"use client";
+
 import Link from "next/link";
+import { useModesySettings } from "@/lib/modesy-settings";
 
 const products = [
   {
@@ -64,32 +67,13 @@ const products = [
   },
 ];
 
-const banners = [
-  {
-    title: "Summer",
-    subtitle: "Choose your style, make your summer.",
-    image:
-      "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=1200&q=85",
-    label: "DISCOUNT",
-    discount: "25%",
-    date: "ON JUNE 29",
-  },
-  {
-    title: "Autumn",
-    subtitle: "Sale",
-    image:
-      "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=85",
-    label: "50%",
-    discount: "OFF",
-    date: "Limited Time",
-  },
-];
-
 export default function SpecialOffers() {
+  const { formatPrice, t } = useModesySettings();
+
   return (
     <section className="bg-white px-5 py-8 sm:px-6">
       <h2 className="mb-7 text-2xl font-bold text-[#252525]">
-        Special Offers
+        {t("Special Offers")}
       </h2>
 
       {/* Daftar produk */}
@@ -99,27 +83,31 @@ export default function SpecialOffers() {
             key={product.name}
             className="group relative min-w-0 overflow-hidden rounded-md border border-gray-200 bg-white transition hover:shadow-md"
           >
-            {/* Area gambar */}
-            <Link href="/products" className="block">
+            {/* Gambar produk */}
+            <Link
+              href="/products"
+              className="block"
+              aria-label={t(product.name)}
+            >
               <div className="relative aspect-[4/4.1] overflow-hidden bg-gray-100">
                 <img
                   src={product.image}
-                  alt={product.name}
+                  alt={t(product.name)}
+                  loading="lazy"
                   className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
                 />
 
-                {/* Label diskon */}
                 <span className="absolute left-0 top-0 rounded-br-xl bg-[#ff3548] px-3 py-2 text-sm font-semibold text-white">
                   {product.discount}
                 </span>
               </div>
             </Link>
 
-            {/* Tombol muncul saat hover pada gambar */}
-            <div className="pointer-events-none absolute right-3 top-3 z-10 flex invisible flex-col gap-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
+            {/* Tombol aksi saat hover */}
+            <div className="pointer-events-none invisible absolute right-3 top-3 z-10 flex flex-col gap-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
               <button
                 type="button"
-                aria-label={`Add ${product.name} to cart`}
+                aria-label={t("Add {name} to cart", { name: t(product.name) })}
                 className="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-full bg-white/95 text-gray-700 shadow-md transition hover:bg-[#00a99d] hover:text-white"
               >
                 <svg
@@ -141,7 +129,7 @@ export default function SpecialOffers() {
 
               <button
                 type="button"
-                aria-label={`Add ${product.name} to wishlist`}
+                aria-label={t("Add {name} to wishlist", { name: t(product.name) })}
                 className="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-full bg-white/95 text-gray-700 shadow-md transition hover:bg-[#00a99d] hover:text-white"
               >
                 <svg
@@ -164,20 +152,20 @@ export default function SpecialOffers() {
             <div className="flex min-h-50 flex-col p-3">
               <Link
                 href="/products"
-                className="line-clamp-2 min-h-12 text-base font-medium leading-6 text-[#222] hover:text-[#00a99d]"
+                className="line-clamp-2 min-h-12 text-base font-medium leading-6 text-[#222] transition-colors hover:text-[#00a99d]"
               >
-                {product.name}
+                {t(product.name)}
               </Link>
 
               <p className="mt-1 text-sm text-gray-500">
-                {product.seller}
+                {t(product.seller)}
               </p>
 
-              {/* Rating dan jumlah wishlist */}
+              {/* Rating */}
               <div className="mt-2 flex items-center justify-between gap-1">
                 <div
                   className="whitespace-nowrap text-lg tracking-[-2px]"
-                  aria-label={`${product.rating} out of 5 stars`}
+                  aria-label={t("{rating} out of 5 stars", { rating: product.rating })}
                 >
                   {Array.from({ length: 5 }, (_, index) => (
                     <span
@@ -198,14 +186,14 @@ export default function SpecialOffers() {
                 </span>
               </div>
 
-              {/* Harga */}
+              {/* Harga mengikuti pengaturan mata uang */}
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 <span className="font-bold text-[#35a853]">
-                  ${product.price}
+                  {formatPrice(product.price)}
                 </span>
 
                 <span className="text-sm font-medium text-gray-400 line-through">
-                  ${product.oldPrice}
+                  {formatPrice(product.oldPrice)}
                 </span>
               </div>
             </div>
@@ -218,11 +206,12 @@ export default function SpecialOffers() {
         <Link
           href="/products"
           className="block overflow-hidden"
-          aria-label="Summer Collection"
+          aria-label={t("Summer Collection")}
         >
           <img
             src="https://modesy.codingest.net/uploads/blocks/202508/block_68b02a364b90c6-71529931.webp"
-            alt="Summer Collection"
+            alt={t("Summer Collection")}
+            loading="lazy"
             className="h-auto w-full object-cover"
           />
         </Link>
@@ -230,11 +219,12 @@ export default function SpecialOffers() {
         <Link
           href="/products"
           className="block overflow-hidden"
-          aria-label="Autumn Sale"
+          aria-label={t("Autumn Sale")}
         >
           <img
             src="https://modesy.codingest.net/uploads/blocks/202508/block_68b02a59a1d144-08234125.webp"
-            alt="Autumn Sale"
+            alt={t("Autumn Sale")}
+            loading="lazy"
             className="h-auto w-full object-cover"
           />
         </Link>

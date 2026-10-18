@@ -1,7 +1,8 @@
-
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react"; // Tambahan useEffect
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useModesySettings } from "@/lib/modesy-settings";
 
 const slides = [
   {
@@ -28,61 +29,103 @@ const slides = [
 ];
 
 export default function HeroBanner() {
+  const { t } = useModesySettings();
   const [active, setActive] = useState(0);
   const slide = slides[active];
+
+  // --- FITUR AUTOPLAY DIMULAI DI SINI ---
+  useEffect(() => {
+    // Menggeser slide setiap 5000ms (5 detik)
+    const timer = setInterval(() => {
+      setActive((current) => (current + 1) % slides.length);
+    }, 5000);
+
+    // Membersihkan timer saat komponen tidak digunakan (mencegah memory leak)
+    return () => clearInterval(timer);
+  }, []);
+  // --- FITUR AUTOPLAY SELESAI ---
 
   function changeSlide(direction: number) {
     setActive(
       (current) =>
-        (current + direction + slides.length) % slides.length
+        (current + direction + slides.length) % slides.length,
     );
   }
 
   return (
-    <section className="relative h-95 overflow-hidden bg-gray-200 sm:h-110 lg:h-130">
-      <div
-        className="absolute inset-0 bg-cover bg-center transition-all duration-500"
-        style={{ backgroundImage: `url("${slide.image}")` }}
-      />
+    <section
+      aria-label={t("Featured promotions")}
+      className="group relative h-[415px] overflow-hidden bg-gray-200 sm:h-[460px] lg:h-[415px]"
+    >
+      {slides.map((item, index) => (
+        <div
+          key={item.title}
+          aria-hidden={index !== active}
+          className={`absolute inset-0 bg-cover bg-center transition-opacity duration-700 ease-in-out ${
+            index === active ? "z-0 opacity-100" : "z-0 opacity-0"
+          }`}
+          style={{ backgroundImage: `url("${item.image}")` }}
+        />
+      ))}
 
-      <div className="absolute inset-0 bg-black/15" />
+      <div className="pointer-events-none absolute inset-0 z-[1] bg-black/15" />
 
-      <div className="relative z-10 flex h-full items-center px-5 sm:px-10 lg:px-6">
-        <div className="max-w-197.5 text-white">
-          <h1 className="text-4xl font-semibold leading-tight drop-shadow-md sm:text-5xl lg:text-6xl">
-            {slide.title}
+      <div className="relative z-10 flex h-full items-center px-6 sm:px-10 lg:px-[4.1%]">
+        <div
+          key={slide.title}
+          className="max-w-[650px] animate-in fade-in slide-in-from-left-4 duration-500"
+        >
+          <h1 className="text-4xl font-semibold leading-tight text-white drop-shadow-md sm:text-5xl lg:text-[48px]">
+            {t(slide.title)}
           </h1>
 
-          <p className="mt-5 max-w-195 text-lg leading-relaxed drop-shadow sm:text-xl">
-            {slide.description}
+          <p className="mt-4 max-w-[600px] text-base leading-relaxed text-white drop-shadow sm:text-lg">
+            {t(slide.description)}
           </p>
 
           <a
             href="/products"
-            className="mt-10 inline-flex rounded-sm bg-[#171717] px-8 py-4 text-base text-white transition hover:bg-[#00a99d]"
+            className="mt-8 inline-flex items-center justify-center rounded-sm bg-[#171717] px-6 py-3 text-sm text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#00a99d] hover:shadow-lg"
           >
-            Explore Now
+            {t("Explore Now")}
           </a>
         </div>
       </div>
 
       <button
         type="button"
-        aria-label="Previous banner"
+        aria-label={t("Previous banner")}
         onClick={() => changeSlide(-1)}
-        className="absolute left-5 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/65 text-3xl text-gray-700 transition hover:bg-white"
+        className="absolute left-5 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/60 text-gray-700 opacity-100 shadow-sm transition-all duration-300 hover:bg-white hover:shadow-md sm:opacity-70 sm:group-hover:opacity-100"
       >
-        ‹
+        <ChevronLeft size={25} strokeWidth={1.7} />
       </button>
 
       <button
         type="button"
-        aria-label="Next banner"
+        aria-label={t("Next banner")}
         onClick={() => changeSlide(1)}
-        className="absolute right-5 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/65 text-3xl text-gray-700 transition hover:bg-white"
+        className="absolute right-5 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/60 text-gray-700 opacity-100 shadow-sm transition-all duration-300 hover:bg-white hover:shadow-md sm:opacity-70 sm:group-hover:opacity-100"
       >
-        ›
+        <ChevronRight size={25} strokeWidth={1.7} />
       </button>
+
+      <div className="absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2">
+        {slides.map((item, index) => (
+          <button
+            key={item.title}
+            type="button"
+            aria-label={t("Go to banner {n}", { n: index + 1 })}
+            aria-current={index === active ? "true" : undefined}
+            onClick={() => setActive(index)}
+            className={`h-2 rounded-full transition-all duration-300 ${
+              index === active
+                ? "w-7 bg-white"
+                : "w-2 bg-white/60 hover:bg-white"
+            }`}
+          />
+        ))}
+      </div>
     </section>
   );
 }

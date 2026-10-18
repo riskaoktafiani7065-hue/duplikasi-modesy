@@ -1,3 +1,6 @@
+"use client";
+
+import { useModesySettings } from "@/lib/modesy-settings";
 
 const clothingGroups = [
   {
@@ -54,6 +57,8 @@ const featuredCategories = [
 ];
 
 export default function MegaMenu() {
+  const { t } = useModesySettings();
+
   return (
     <div className="absolute left-0 top-full z-50 hidden w-full border border-gray-100 bg-white shadow-lg group-hover:block group-focus-within:block">
       <div className="mx-auto grid max-w-330 grid-cols-12 gap-8 px-8 py-8">
@@ -61,7 +66,7 @@ export default function MegaMenu() {
           {clothingGroups.map((group) => (
             <div key={group.title}>
               <h3 className="mb-4 text-sm font-semibold text-gray-900">
-                {group.title}
+                {t(group.title)}
               </h3>
 
               <ul className="space-y-3">
@@ -71,7 +76,7 @@ export default function MegaMenu() {
                       href="/products"
                       className="text-sm text-gray-500 transition hover:text-[#00a99d]"
                     >
-                      {item}
+                      {t(item)}
                     </a>
                   </li>
                 ))}
@@ -90,13 +95,13 @@ export default function MegaMenu() {
               <div className="aspect-3/4 overflow-hidden bg-gray-100">
                 <img
                   src={category.image}
-                  alt={category.title}
+                  alt={t(category.title)}
                   className="h-full w-full object-cover transition duration-300 group-hover/card:scale-105"
                 />
               </div>
 
               <p className="mt-3 text-center text-xs font-medium text-gray-700">
-                {category.title}
+                {t(category.title)}
               </p>
             </a>
           ))}

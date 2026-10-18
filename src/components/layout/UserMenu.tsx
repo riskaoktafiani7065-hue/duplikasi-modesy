@@ -13,6 +13,7 @@ import {
   LogOut,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { useModesySettings } from "@/lib/modesy-settings";
 
 type Props = {
   user: {
@@ -24,12 +25,13 @@ type Props = {
 };
 
 export default function UserMenu({ user, role }: Props) {
+  const { t } = useModesySettings();
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const supabase = createClient();
 
   const displayName =
-    user.user_metadata?.name || user.email?.split("@")[0] || "User";
+    user.user_metadata?.name || user.email?.split("@")[0] || t("User");
   const avatarUrl = user.user_metadata?.avatar_url;
   const initial = displayName.charAt(0).toUpperCase();
 
@@ -60,14 +62,14 @@ export default function UserMenu({ user, role }: Props) {
 
   const menuItems = [
     ...(isAdmin
-      ? [{ label: "Admin Panel", href: "/admin", icon: LayoutDashboard }]
+      ? [{ label: t("Admin Panel"), href: "/admin", icon: LayoutDashboard }]
       : []),
-    { label: "Profile", href: "/profile", icon: User },
-    { label: "Wallet", href: "/wallet", icon: Wallet },
-    { label: "Orders", href: "/orders", icon: Package },
-    { label: "My Coupons", href: "/coupons", icon: Ticket },
-    { label: "Messages", href: "/messages", icon: MessageSquare },
-    { label: "Profile Settings", href: "/settings", icon: Settings },
+    { label: t("Profile"), href: "/profile", icon: User },
+    { label: t("Wallet"), href: "/wallet", icon: Wallet },
+    { label: t("Orders"), href: "/orders", icon: Package },
+    { label: t("My Coupons"), href: "/coupons", icon: Ticket },
+    { label: t("Messages"), href: "/messages", icon: MessageSquare },
+    { label: t("Profile Settings"), href: "/settings", icon: Settings },
   ];
 
   return (
@@ -107,7 +109,7 @@ export default function UserMenu({ user, role }: Props) {
                 className="flex items-center gap-3 px-4 py-2.5 text-sm text-[#666666] transition hover:bg-gray-50 hover:text-[#00a99d]"
               >
                 <Icon size={16} className="shrink-0 text-gray-400" />
-                <span>{item.label}</span>
+                <span>{t(item.label)}</span>
               </Link>
             );
           })}
@@ -120,7 +122,7 @@ export default function UserMenu({ user, role }: Props) {
             className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-[#666666] transition hover:bg-gray-50 hover:text-[#00a99d]"
           >
             <LogOut size={16} className="shrink-0 text-gray-400" />
-            <span>Logout</span>
+            <span>{t("Logout")}</span>
           </button>
         </div>
       )}

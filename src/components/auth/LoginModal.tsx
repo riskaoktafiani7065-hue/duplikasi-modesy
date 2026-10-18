@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { X } from "lucide-react";
+import { useModesySettings } from "@/lib/modesy-settings";
 
 type Props = {
   isOpen: boolean;
@@ -16,6 +17,7 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Prop
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const supabase = createClient();
+  const { t } = useModesySettings();
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
@@ -68,13 +70,13 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Prop
           type="button"
           onClick={onClose}
           className="absolute right-5 top-5 text-gray-400 transition hover:text-gray-700"
-          aria-label="Close"
+          aria-label={t("Close")}
         >
           <X size={20} />
         </button>
 
         <h2 className="mb-8 text-center text-3xl font-semibold text-gray-900">
-          Login
+          {t("Login")}
         </h2>
 
         <button
@@ -88,11 +90,11 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Prop
             <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
             <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
           </svg>
-          Connect with Google
+          {t("Connect with Google")}
         </button>
 
         <div className="my-6 text-center text-sm text-gray-500">
-          Or login with email
+          {t("Or login with email")}
         </div>
 
         {error && (
@@ -122,7 +124,7 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Prop
             />
             <div className="mt-2 text-right">
               <button type="button" className="text-sm text-gray-600 transition hover:text-teal-600">
-                Forgot Password?
+                {t("Forgot Password?")}
               </button>
             </div>
           </div>
@@ -132,18 +134,18 @@ export default function LoginModal({ isOpen, onClose, onSwitchToRegister }: Prop
             disabled={loading}
             className="w-full rounded-lg bg-teal-500 py-3 font-semibold text-white transition hover:bg-teal-600 disabled:opacity-60"
           >
-            {loading ? "Logging in..." : "Login"}
+            {loading ? t("Logging in...") : t("Login")}
           </button>
         </form>
 
         <p className="mt-6 text-center text-sm text-gray-500">
-          Don&apos;t have an account?{" "}
+          {t("Don't have an account?")}{" "}
           <button
             type="button"
             onClick={onSwitchToRegister}
             className="font-medium text-teal-600 hover:text-teal-700"
           >
-            Register
+            {t("Register")}
           </button>
         </p>
       </div>

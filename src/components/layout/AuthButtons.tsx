@@ -3,8 +3,10 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import UserMenu from "./UserMenu";
+import { useModesySettings } from "@/lib/modesy-settings";
 
 export default function AuthButtons() {
+  const { t, language } = useModesySettings();
   const [user, setUser] = useState<any>(null);
   const [role, setRole] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -66,21 +68,43 @@ export default function AuthButtons() {
 
   return (
     <div className="flex shrink-0 items-center gap-2 text-sm">
-      <button
-        type="button"
-        onClick={() => openAuth("login")}
-        className="text-[#444444] transition hover:text-[#00a99d]"
-      >
-        Login
-      </button>
-      <span className="text-gray-300">/</span>
-      <button
-        type="button"
-        onClick={() => openAuth("register")}
-        className="font-medium text-[#444444] transition hover:text-[#00a99d]"
-      >
-        Register
-      </button>
+      {language === "ar" ? (
+        <>
+          <button
+            type="button"
+            onClick={() => openAuth("register")}
+            className="text-[#444444] transition hover:text-[#00a99d]"
+          >
+            {t("Register")}
+          </button>
+          <span className="text-gray-300">/</span>
+          <button
+            type="button"
+            onClick={() => openAuth("login")}
+            className="font-medium text-[#444444] transition hover:text-[#00a99d]"
+          >
+            {t("Login")}
+          </button>
+        </>
+      ) : (
+        <>
+          <button
+            type="button"
+            onClick={() => openAuth("login")}
+            className="text-[#444444] transition hover:text-[#00a99d]"
+          >
+            {t("Login")}
+          </button>
+          <span className="text-gray-300">/</span>
+          <button
+            type="button"
+            onClick={() => openAuth("register")}
+            className="font-medium text-[#444444] transition hover:text-[#00a99d]"
+          >
+            {t("Register")}
+          </button>
+        </>
+      )}
     </div>
   );
 }

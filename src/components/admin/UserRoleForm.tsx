@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Save, Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { useModesySettings } from "@/lib/modesy-settings";
 
 type Props = {
   userId: string;
@@ -16,12 +17,13 @@ export default function UserRoleForm({ userId, currentRole }: Props) {
   const [role, setRole] = useState(currentRole);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "ok" | "err"; text: string } | null>(null);
+  const { t } = useModesySettings();
   const router = useRouter();
   const supabase = createClient();
 
   async function handleSave() {
     if (role === currentRole) {
-      setMessage({ type: "err", text: "Role belum berubah" });
+      setMessage({ type: "err", text: t("Role belum berubah") });
       return;
     }
 
@@ -39,7 +41,7 @@ export default function UserRoleForm({ userId, currentRole }: Props) {
       return;
     }
 
-    setMessage({ type: "ok", text: "Role berhasil diubah" });
+    setMessage({ type: "ok", text: t("Role berhasil diubah") });
     setLoading(false);
     router.refresh();
   }
@@ -47,7 +49,7 @@ export default function UserRoleForm({ userId, currentRole }: Props) {
   return (
     <div className="space-y-3">
       <label className="block text-sm font-medium text-gray-700">
-        Role User
+        {t("Role User")}
       </label>
 
       <div className="flex gap-3">
@@ -58,7 +60,7 @@ export default function UserRoleForm({ userId, currentRole }: Props) {
         >
           {roles.map((r) => (
             <option key={r} value={r}>
-              {r}
+              {t(r)}
             </option>
           ))}
         </select>
@@ -74,7 +76,7 @@ export default function UserRoleForm({ userId, currentRole }: Props) {
           ) : (
             <Save size={16} />
           )}
-          Simpan
+          {t("Simpan")}
         </button>
       </div>
 

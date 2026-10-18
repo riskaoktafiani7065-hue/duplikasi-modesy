@@ -3,6 +3,7 @@
 import { useState, type ReactNode } from "react";
 import AdminSidebar from "@/components/admin/Sidebar";
 import AdminHeader from "@/components/admin/AdminHeader";
+import { useModesySettings } from "@/lib/modesy-settings";
 
 export default function AdminShell({
   email,
@@ -11,6 +12,8 @@ export default function AdminShell({
   email: string;
   children: ReactNode;
 }) {
+  const { t } = useModesySettings();
+
   // Desktop (>= lg): sidebar bisa disembunyikan
   const [collapsed, setCollapsed] = useState(false);
   // Mobile: sidebar tampil sebagai drawer
@@ -39,9 +42,9 @@ export default function AdminShell({
 
         <footer className="flex flex-wrap items-center justify-between gap-2 border-t border-gray-200 bg-white px-5 py-3 text-[11px] text-gray-500">
           <span>
-            Copyright © {new Date().getFullYear()} Modesy. All Rights Reserved.
+            {t("Copyright © {year} Modesy. All Rights Reserved.", { year: new Date().getFullYear() })}
           </span>
-          <span>Version 2.7</span>
+          <span>{t("Version {v}", { v: "2.7" })}</span>
         </footer>
       </div>
     </div>

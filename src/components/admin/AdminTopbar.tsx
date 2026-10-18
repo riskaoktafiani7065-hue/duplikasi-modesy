@@ -14,12 +14,15 @@ import {
   User,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { useModesySettings } from "@/lib/modesy-settings";
+import { languageNames } from "@/lib/i18n";
 
 type Props = {
   onToggleSidebar: () => void;
 };
 
 export default function AdminTopbar({ onToggleSidebar }: Props) {
+  const { language, t } = useModesySettings();
   const [user, setUser] = useState<any>(null);
   const [openMenu, setOpenMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -54,7 +57,7 @@ export default function AdminTopbar({ onToggleSidebar }: Props) {
   }
 
   const displayName =
-    user?.user_metadata?.name || user?.email?.split("@")[0] || "Admin";
+    user?.user_metadata?.name || user?.email?.split("@")[0] || t("Admin");
   const initial = displayName.charAt(0).toUpperCase() || "A";
 
   return (
@@ -65,7 +68,7 @@ export default function AdminTopbar({ onToggleSidebar }: Props) {
           type="button"
           onClick={onToggleSidebar}
           className="flex size-9 items-center justify-center rounded text-gray-500 transition hover:bg-gray-100 hover:text-gray-900"
-          aria-label="Buka atau tutup sidebar"
+          aria-label={t("Toggle sidebar")}
         >
           <Menu size={20} />
         </button>
@@ -80,7 +83,7 @@ export default function AdminTopbar({ onToggleSidebar }: Props) {
           className="inline-flex items-center gap-1.5 rounded-sm bg-[#00a88f] px-3 py-2 text-[11px] font-semibold text-white transition hover:bg-[#008f7a]"
         >
           <Eye size={13} />
-          View Site
+          {t("View Site")}
         </Link>
 
         <button
@@ -88,14 +91,14 @@ export default function AdminTopbar({ onToggleSidebar }: Props) {
           className="hidden items-center gap-1.5 text-xs text-gray-500 transition hover:text-gray-900 sm:flex"
         >
           <Globe size={14} />
-          English
+          {languageNames[language]}
           <ChevronDown size={12} />
         </button>
 
         <button
           type="button"
           className="relative flex size-9 items-center justify-center rounded text-gray-500 transition hover:bg-gray-100"
-          aria-label="Notifikasi"
+          aria-label={t("Notifications")}
         >
           <Bell size={17} />
           <span className="absolute right-2 top-2 size-1.5 rounded-full bg-[#00a88f]" />
@@ -135,7 +138,7 @@ export default function AdminTopbar({ onToggleSidebar }: Props) {
                 className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 transition hover:bg-gray-50"
               >
                 <Settings size={15} className="text-gray-400" />
-                Pengaturan
+                {t("Settings")}
               </Link>
 
               <Link
@@ -144,7 +147,7 @@ export default function AdminTopbar({ onToggleSidebar }: Props) {
                 className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 transition hover:bg-gray-50"
               >
                 <User size={15} className="text-gray-400" />
-                Lihat Toko
+                {t("View Store")}
               </Link>
 
               <div className="my-1 border-t border-gray-100" />
@@ -155,7 +158,7 @@ export default function AdminTopbar({ onToggleSidebar }: Props) {
                 className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-red-600 transition hover:bg-red-50"
               >
                 <LogOut size={15} />
-                Logout
+                {t("Logout")}
               </button>
             </div>
           )}

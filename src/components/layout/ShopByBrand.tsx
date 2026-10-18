@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useModesySettings } from "@/lib/modesy-settings";
 
 const brands = [
   { name: "Nike", image: "https://modesy.codingest.net/uploads/blocks/202508/brand_w256_68b02d75760534-51758987.webp" },
@@ -23,6 +24,7 @@ const brands = [
 ];
 
 export default function ShopByBrand() {
+  const { t } = useModesySettings();
   const sliderRef = useRef<HTMLDivElement>(null);
   const pausedRef = useRef(false);
   const manualPauseRef = useRef(false);
@@ -103,7 +105,7 @@ export default function ShopByBrand() {
   return (
     <section className="bg-white px-5 pb-10 pt-8 sm:px-6">
       <h2 className="mb-7 text-[27px] font-bold text-[#222]">
-        Shop By Brand
+        {t("Shop By Brand")}
       </h2>
 
       <div
@@ -127,8 +129,8 @@ export default function ShopByBrand() {
             >
               <img
                 src={brand.image}
-                alt={brand.name}
-                title={brand.name}
+                alt={t(brand.name)}
+                title={t(brand.name)}
                 loading="lazy"
                 className="max-h-18 max-w-full object-contain"
               />
@@ -139,7 +141,7 @@ export default function ShopByBrand() {
         <button
           type="button"
           onClick={() => moveManually(-1)}
-          aria-label="Previous brands"
+          aria-label={t("Previous brands")}
           className="absolute left-3 top-1/2 flex h-13 w-13 -translate-y-1/2 items-center justify-center rounded-full bg-white text-3xl text-[#333] shadow-md hover:bg-gray-50"
         >
           ‹
@@ -148,7 +150,7 @@ export default function ShopByBrand() {
         <button
           type="button"
           onClick={() => moveManually(1)}
-          aria-label="Next brands"
+          aria-label={t("Next brands")}
           className="absolute right-3 top-1/2 flex h-13 w-13 -translate-y-1/2 items-center justify-center rounded-full bg-white text-3xl text-[#333] shadow-md hover:bg-gray-50"
         >
           ›

@@ -1,5 +1,7 @@
+"use client";
 
 import Link from "next/link";
+import { useModesySettings } from "@/lib/modesy-settings";
 
 const products = [
   {
@@ -53,18 +55,21 @@ const products = [
 ];
 
 export default function Clothing() {
+  // TAMBAHKAN formatPrice DI SINI
+  const { t, formatPrice } = useModesySettings();
+
   return (
     <section className="bg-white px-5 py-12 sm:px-6">
       <div className="mb-7 flex items-center justify-between">
         <h2 className="text-2xl font-bold text-[#252525]">
-          Clothing
+          {t("Clothing")}
         </h2>
 
         <Link
           href="/products"
           className="text-sm text-gray-600 transition hover:text-[#00a99d]"
         >
-          View All →
+          {t("View All →")}
         </Link>
       </div>
 
@@ -78,55 +83,56 @@ export default function Clothing() {
               <Link href="/products" className="block h-full">
                 <img
                   src={product.image}
-                  alt={product.name}
+                  alt={t(product.name)}
                   className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
                 />
               </Link>
 
               {/* Tombol muncul ketika produk diarahkan */}
-            <div className="pointer-events-none invisible absolute right-3 top-3 z-10 flex flex-col gap-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
-              <button
-                type="button"
-                aria-label="Add to cart"
-                className="pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full bg-white text-gray-700 shadow-md hover:bg-[#00a99d] hover:text-white"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="22"
-                  height="22"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.7"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+              {/* PERBAIKAN: right-3 diubah menjadi end-3 agar support RTL (Arab) */}
+              <div className="pointer-events-none invisible absolute end-3 top-3 z-10 flex flex-col gap-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
+                <button
+                  type="button"
+                  aria-label={t("Add to cart")}
+                  className="pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full bg-white text-gray-700 shadow-md hover:bg-[#00a99d] hover:text-white"
                 >
-                  <circle cx="9" cy="21" r="1" />
-                  <circle cx="20" cy="21" r="1" />
-                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-                </svg>
-              </button>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="22"
+                    height="22"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <circle cx="9" cy="21" r="1" />
+                    <circle cx="20" cy="21" r="1" />
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                  </svg>
+                </button>
 
-              <button
-                type="button"
-                aria-label="Add to wishlist"
-                className="pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full bg-white text-gray-700 shadow-md hover:bg-[#00a99d] hover:text-white"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="23"
-                  height="23"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.7"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+                <button
+                  type="button"
+                  aria-label={t("Add to wishlist")}
+                  className="pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full bg-white text-gray-700 shadow-md hover:bg-[#00a99d] hover:text-white"
                 >
-                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                </svg>
-              </button>
-            </div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="23"
+                    height="23"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                  </svg>
+                </button>
+              </div>
 
             </div>
 
@@ -135,11 +141,11 @@ export default function Clothing() {
                 href="/products"
                 className="line-clamp-2 min-h-12 text-sm font-medium leading-5 text-[#252525] hover:text-[#00a99d]"
               >
-                {product.name}
+                {t(product.name)}
               </Link>
 
               <p className="mt-1 text-sm text-gray-500">
-                {product.seller}
+                {t(product.seller)}
               </p>
 
               <div className="mt-2 flex items-center justify-between gap-1">
@@ -152,17 +158,18 @@ export default function Clothing() {
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 {product.quote ? (
                   <span className="text-sm font-medium text-[#35a853]">
-                    Request a Quote
+                    {t("Request a Quote")}
                   </span>
                 ) : (
                   <>
+                    {/* PERBAIKAN: Gunakan formatPrice() bukan hardcode $ */}
                     <span className="font-bold text-[#35a853]">
-                      ${product.price}
+                      {formatPrice(product.price || 0)}
                     </span>
 
                     {product.oldPrice && (
                       <span className="text-sm text-gray-400 line-through">
-                        ${product.oldPrice}
+                        {formatPrice(product.oldPrice)}
                       </span>
                     )}
                   </>

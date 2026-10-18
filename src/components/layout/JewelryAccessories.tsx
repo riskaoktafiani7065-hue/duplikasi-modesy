@@ -1,5 +1,7 @@
+"use client";
 
 import Link from "next/link";
+import { useModesySettings } from "@/lib/modesy-settings";
 
 const products = [
   {
@@ -63,18 +65,21 @@ const products = [
 ];
 
 export default function JewelryAccessories() {
+  // TAMBAHKAN formatPrice DI SINI
+  const { t, formatPrice } = useModesySettings();
+
   return (
     <section className="bg-white px-5 pb-12 pt-5 sm:px-6">
       <div className="mb-7 flex items-center justify-between">
         <h2 className="text-2xl font-bold text-[#252525]">
-          Jewelry &amp; Accessories
+          {t("Jewelry & Accessories")}
         </h2>
 
         <Link
           href="/products"
           className="flex items-center gap-2 text-sm text-gray-600 transition hover:text-[#00a99d]"
         >
-          View All <span className="text-xl">→</span>
+          {t("View All")} <span className="text-xl">{t("→")}</span>
         </Link>
       </div>
 
@@ -88,15 +93,16 @@ export default function JewelryAccessories() {
               <Link href="/products" className="block h-full">
                 <img
                   src={product.image}
-                  alt={product.name}
+                  alt={t(product.name)}
                   className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
                 />
               </Link>
 
-              <div className="pointer-events-none invisible absolute right-3 top-3 z-10 flex flex-col gap-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
+              {/* PERBAIKAN: right-3 diganti menjadi end-3 */}
+              <div className="pointer-events-none invisible absolute end-3 top-3 z-10 flex flex-col gap-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
                 <button
                   type="button"
-                  aria-label="Add to cart"
+                  aria-label={t("Add to cart")}
                   className="pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full bg-white text-gray-700 shadow-md hover:bg-[#00a99d] hover:text-white"
                 >
                   <svg
@@ -118,7 +124,7 @@ export default function JewelryAccessories() {
 
                 <button
                   type="button"
-                  aria-label="Add to wishlist"
+                  aria-label={t("Add to wishlist")}
                   className="pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full bg-white text-gray-700 shadow-md hover:bg-[#00a99d] hover:text-white"
                 >
                   <svg
@@ -143,11 +149,11 @@ export default function JewelryAccessories() {
                 href="/products"
                 className="line-clamp-2 min-h-12 text-sm font-medium leading-5 text-[#252525] hover:text-[#00a99d]"
               >
-                {product.name}
+                {t(product.name)}
               </Link>
 
               <p className="mt-1 text-sm text-gray-500">
-                {product.seller}
+                {t(product.seller)}
               </p>
 
               <div className="mt-2 flex items-center justify-between gap-1">
@@ -175,10 +181,11 @@ export default function JewelryAccessories() {
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 {product.quote ? (
                   <span className="text-sm font-medium text-[#35a853]">
-                    Request a Quote
+                    {t("Request a Quote")}
                   </span>
                 ) : (
                   <>
+                    {/* PERBAIKAN: Gunakan formatPrice() bukan hardcode $ */}
                     <span
                       className={`font-bold ${
                         product.oldPrice
@@ -186,12 +193,12 @@ export default function JewelryAccessories() {
                           : "text-[#252525]"
                       }`}
                     >
-                      ${product.price}
+                      {formatPrice(product.price || 0)}
                     </span>
 
                     {product.oldPrice && (
                       <span className="text-sm text-gray-400 line-through">
-                        ${product.oldPrice}
+                        {formatPrice(product.oldPrice)}
                       </span>
                     )}
                   </>

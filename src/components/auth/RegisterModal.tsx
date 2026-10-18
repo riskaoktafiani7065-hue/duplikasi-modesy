@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { X } from "lucide-react";
+import { useModesySettings } from "@/lib/modesy-settings";
 
 type Props = {
   isOpen: boolean;
@@ -18,6 +19,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Prop
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const supabase = createClient();
+  const { t } = useModesySettings();
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
@@ -53,7 +55,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Prop
       return;
     }
 
-    setSuccess("Registrasi berhasil! Cek email untuk verifikasi.");
+    setSuccess(t("Registrasi berhasil! Cek email untuk verifikasi."));
     setLoading(false);
   }
 
@@ -70,13 +72,13 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Prop
           type="button"
           onClick={onClose}
           className="absolute right-5 top-5 text-gray-400 transition hover:text-gray-700"
-          aria-label="Close"
+          aria-label={t("Close")}
         >
           <X size={20} />
         </button>
 
         <h2 className="mb-8 text-center text-3xl font-semibold text-gray-900">
-          Register
+          {t("Register")}
         </h2>
 
         {error && (
@@ -94,7 +96,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Prop
         <form onSubmit={handleRegister} className="space-y-4">
           <input
             type="text"
-            placeholder="Nama lengkap"
+            placeholder={t("Nama lengkap")}
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
@@ -112,7 +114,7 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Prop
 
           <input
             type="password"
-            placeholder="Password minimal 6 karakter"
+            placeholder={t("Password minimal 6 karakter")}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -125,18 +127,18 @@ export default function RegisterModal({ isOpen, onClose, onSwitchToLogin }: Prop
             disabled={loading}
             className="w-full rounded-lg bg-teal-500 py-3 font-semibold text-white transition hover:bg-teal-600 disabled:opacity-60"
           >
-            {loading ? "Registering..." : "Register"}
+            {loading ? t("Registering...") : t("Register")}
           </button>
         </form>
 
         <p className="mt-6 text-center text-sm text-gray-500">
-          Already have an account?{" "}
+          {t("Already have an account?")}{" "}
           <button
             type="button"
             onClick={onSwitchToLogin}
             className="font-medium text-teal-600 hover:text-teal-700"
           >
-            Login
+            {t("Login")}
           </button>
         </p>
       </div>

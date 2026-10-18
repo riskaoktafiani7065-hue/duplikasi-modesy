@@ -1,4 +1,8 @@
-﻿type Props = {
+﻿"use client";
+
+import { useModesySettings } from "@/lib/modesy-settings";
+
+type Props = {
   role: string;
 };
 
@@ -10,12 +14,13 @@ const colors: Record<string, string> = {
 };
 
 export default function RoleBadge({ role }: Props) {
+  const { t } = useModesySettings();
   const style = colors[role] || "bg-gray-100 text-gray-700 border-gray-200";
   return (
     <span
       className={`inline-flex rounded-full border px-2.5 py-0.5 text-xs font-semibold ${style}`}
     >
-      {role}
+      {t(role)}
     </span>
   );
 }

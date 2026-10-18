@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRef, useState, useEffect, useCallback } from "react";
+import { useModesySettings } from "@/lib/modesy-settings";
 
 const posts = [
   {
@@ -71,6 +72,7 @@ const posts = [
 ];
 
 export default function LatestBlogPosts() {
+  const { t } = useModesySettings();
   const sliderRef = useRef<HTMLDivElement>(null);
   const [canGoLeft, setCanGoLeft] = useState(false);
   const [canGoRight, setCanGoRight] = useState(false);
@@ -127,7 +129,7 @@ export default function LatestBlogPosts() {
   return (
     <section className="bg-white px-5 pb-14 pt-8 sm:px-6">
       <h2 className="mb-7 text-[27px] font-bold text-[#222]">
-        Latest Blog Posts
+        {t("Latest Blog Posts")}
       </h2>
 
       <div className="relative isolate">
@@ -145,7 +147,7 @@ export default function LatestBlogPosts() {
                 <div className="aspect-1.5/1 overflow-hidden bg-gray-100">
                   <img
                     src={post.image}
-                    alt={post.title}
+                    alt={t(post.title)}
                     className="h-full w-full object-cover transition duration-300 hover:scale-105"
                   />
                 </div>
@@ -155,7 +157,7 @@ export default function LatestBlogPosts() {
                 href="/blog"
                 className="mt-5 block text-[22px] font-medium leading-normal text-[#252525] hover:text-[#00a99d]"
               >
-                {post.title}
+                {t(post.title)}
               </Link>
 
               <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-[15px] text-[#777]">
@@ -171,7 +173,7 @@ export default function LatestBlogPosts() {
                   >
                     <path d="M3 5h7l2 3h9v11H3z" />
                   </svg>
-                  {post.category}
+                  {t(post.category)}
                 </span>
 
                 <span className="flex items-center gap-2">
@@ -187,12 +189,12 @@ export default function LatestBlogPosts() {
                     <circle cx="12" cy="12" r="9" />
                     <path d="M12 7v5l3 2" />
                   </svg>
-                  3 months ago
+                  {t("3 months ago")}
                 </span>
               </div>
 
               <p className="mt-5 text-[17px] leading-[1.8] text-[#777]">
-                {post.description}
+                {t(post.description)}
               </p>
             </article>
           ))}
@@ -200,7 +202,7 @@ export default function LatestBlogPosts() {
 
         <button
           type="button"
-          aria-label="Artikel sebelumnya"
+          aria-label={t("Previous article")}
           onClick={() => move(-1)}
           disabled={!canGoLeft}
           className="absolute left-4 top-[35%] z-50 flex h-15 w-15 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-3xl text-[#333] shadow-md pointer-events-auto hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-30"
@@ -210,7 +212,7 @@ export default function LatestBlogPosts() {
 
         <button
           type="button"
-          aria-label="Artikel berikutnya"
+          aria-label={t("Next article")}
           onClick={() => move(1)}
           disabled={!canGoRight}
           className="absolute right-4 top-[35%] z-50 flex h-15 w-15 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-3xl text-[#333] shadow-md pointer-events-auto hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-30"

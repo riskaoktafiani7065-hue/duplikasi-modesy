@@ -1,4 +1,5 @@
-﻿import type { ReactNode } from "react";
+
+import type { ReactNode } from "react";
 import { redirect } from "next/navigation";
 
 import { createClient } from "@/lib/supabase/server";
@@ -31,6 +32,8 @@ export default async function AdminLayout({
   }
 
   return (
-    <AdminShell email={user.email ?? "Admin"}>{children}</AdminShell>
+    <AdminShell email={user.email ?? "Admin"}>
+      {children}
+    </AdminShell>
   );
 }

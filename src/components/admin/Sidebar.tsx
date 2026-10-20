@@ -1,4 +1,5 @@
-﻿"use client";
+﻿
+"use client";
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -50,7 +51,6 @@ export default function AdminSidebar({
 
   return (
     <>
-      {/* Overlay untuk tampilan mobile */}
       {isOpen && (
         <button
           type="button"
@@ -67,7 +67,6 @@ export default function AdminSidebar({
           isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         }`}
       >
-        {/* Logo */}
         <div
           className={`flex min-h-18.25 items-center justify-between border-b border-gray-200 ${
             collapsed ? "px-4" : "px-6"
@@ -101,7 +100,6 @@ export default function AdminSidebar({
           </button>
         </div>
 
-        {/* Menu */}
         <nav
           aria-label="Menu admin"
           className="flex-1 overflow-y-auto px-3 py-4"
@@ -121,9 +119,7 @@ export default function AdminSidebar({
                 title={collapsed ? item.name : undefined}
                 aria-current={isActive ? "page" : undefined}
                 className={`mb-1 flex items-center rounded-lg py-2.5 text-sm font-medium transition-colors ${
-                  collapsed
-                    ? "justify-center px-2"
-                    : "gap-3 px-3"
+                  collapsed ? "justify-center px-2" : "gap-3 px-3"
                 } ${
                   isActive
                     ? "bg-[#00a99d] text-white"
@@ -131,14 +127,12 @@ export default function AdminSidebar({
                 }`}
               >
                 <Icon size={18} className="shrink-0" />
-
                 {!collapsed && <span>{item.name}</span>}
               </Link>
             );
           })}
         </nav>
 
-        {/* Logout */}
         <div className="border-t border-gray-200 p-3">
           <button
             type="button"

@@ -23,7 +23,7 @@ const slides = [
     description:
       "Browse exciting finds and discover your next favorite item",
     image:
-      "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=2000&q=85",
+      "https://modesy.codingest.net/uploads/slider/202608/slider_2560x800_6a9434c4d28763-19000658.webp",
   },
 ];
 

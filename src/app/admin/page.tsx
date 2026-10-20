@@ -185,7 +185,7 @@ export default async function AdminDashboardPage() {
           return (
             <div
               key={stat.label}
-              className="relative flex min-h-[124px] items-center overflow-hidden rounded-[2px] p-5 text-white"
+              className="relative flex min-h-31 items-center overflow-hidden rounded-xs p-5 text-white"
               style={{ backgroundColor: stat.color }}
             >
               <div className="relative z-10 min-w-0">
@@ -208,7 +208,7 @@ export default async function AdminDashboardPage() {
       {/* Orders and transactions */}
       <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
         <Panel title="Latest Orders" href="/admin/orders">
-          <div className="max-h-[310px] overflow-auto">
+          <div className="max-h-77.5 overflow-auto">
             <table className="admin-table">
               <thead>
                 <tr>
@@ -262,7 +262,7 @@ export default async function AdminDashboardPage() {
         </Panel>
 
         <Panel title="Latest Transactions" href="/admin/payments">
-          <div className="max-h-[310px] overflow-auto">
+          <div className="max-h-77.5 overflow-auto">
             <table className="admin-table">
               <thead>
                 <tr>
@@ -308,7 +308,7 @@ export default async function AdminDashboardPage() {
 
         {/* Products */}
         <Panel title="Latest Products" href="/admin/products">
-          <div className="max-h-[310px] overflow-auto">
+          <div className="max-h-77.5 overflow-auto">
             <table className="admin-table">
               <thead>
                 <tr>

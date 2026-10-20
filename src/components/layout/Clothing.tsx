@@ -1,7 +1,9 @@
+
 "use client";
 
 import { useState } from "react";
 import Link from "next/link";
+import { useLocale } from "next-intl";
 import { useCurrency } from "@/components/layout/CurrencyContext";
 
 const products = [
@@ -115,8 +117,37 @@ const products = [
   },
 ];
 
+const arabicTranslations: Record<string, string> = {
+  Clothing: "ملابس",
+  "View All": "عرض الكل",
+  "Request a Quote": "اطلب عرض سعر",
+  "Previous product": "المنتج السابق",
+  "Next product": "المنتج التالي",
+  "Add to cart": "أضف إلى السلة",
+  "Add to wishlist": "أضف إلى المفضلة",
+
+  "Navy polka dot dress": "فستان كحلي منقط",
+  "Black midi skirt with white flowers": "تنورة سوداء متوسطة الطول بزهور بيضاء",
+  "Floral women sundress": "فستان نسائي صيفي مزهر",
+  "Men outerwear navy color": "معطف رجالي باللون الكحلي",
+  "Women lace blouse with different colors": "بلوزة نسائية دانتيل بألوان متعددة",
+  "Women casual dress": "فستان نسائي كاجوال",
+  "Light blue women shirt": "قميص نسائي أزرق فاتح",
+  "Women red casual dress": "فستان نسائي أحمر كاجوال",
+  "Summer fashion top lace": "بلوزة دانتيل صيفية أنيقة",
+  "Elegant white lace fabric": "قماش دانتيل أبيض أنيق",
+  "Cobalt man t-shirt all colors": "قميص رجالي أزرق كوبالت بألوان متعددة",
+};
+
+function translateText(text: string, locale: string) {
+  if (locale !== "ar") return text;
+  return arabicTranslations[text] ?? text;
+}
+
 export default function Clothing() {
   const { formatPrice } = useCurrency();
+  const locale = useLocale();
+  const t = (text: string) => translateText(text, locale);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const nextSlide = () => {
@@ -139,14 +170,14 @@ export default function Clothing() {
       {/* Judul dan View All */}
       <div className="mb-7 flex items-center justify-between">
         <h2 className="text-2xl font-bold text-[#252525]">
-          Clothing
+          {t("Clothing")}
         </h2>
 
         <Link
           href="/products"
           className="text-base text-[#252525] transition hover:text-[#00a99d]"
         >
-          View All →
+          {t("View All")} →
         </Link>
       </div>
 
@@ -156,7 +187,7 @@ export default function Clothing() {
         <button
           type="button"
           onClick={prevSlide}
-          aria-label="Produk sebelumnya"
+          aria-label={t("Previous product")}
           className="absolute left-4 top-35 z-20 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-gray-800 shadow-md transition hover:bg-white"
         >
           <svg
@@ -178,7 +209,7 @@ export default function Clothing() {
         <button
           type="button"
           onClick={nextSlide}
-          aria-label="Produk berikutnya"
+          aria-label={t("Next product")}
           className="absolute right-4 top-35 z-20 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-gray-800 shadow-md transition hover:bg-white"
         >
           <svg
@@ -208,7 +239,7 @@ export default function Clothing() {
                 <div className="aspect-square overflow-hidden bg-gray-100">
                   <img
                     src={product.image}
-                    alt={product.name}
+                    alt={t(product.name)}
                     loading="lazy"
                     className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
                   />
@@ -219,7 +250,7 @@ export default function Clothing() {
               <div className="pointer-events-none invisible absolute right-3 top-3 z-10 flex flex-col gap-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
                 <button
                   type="button"
-                  aria-label={`Tambah ${product.name} ke keranjang`}
+                  aria-label={`${t("Add to cart")}: ${t(product.name)}`}
                   className="pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full bg-white text-gray-700 shadow-md transition hover:bg-[#00a99d] hover:text-white"
                 >
                   <svg
@@ -241,7 +272,7 @@ export default function Clothing() {
 
                 <button
                   type="button"
-                  aria-label={`Tambah ${product.name} ke wishlist`}
+                  aria-label={`${t("Add to wishlist")}: ${t(product.name)}`}
                   className="pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full bg-white text-gray-700 shadow-md transition hover:bg-[#00a99d] hover:text-white"
                 >
                   <svg
@@ -266,7 +297,7 @@ export default function Clothing() {
                   href="/products"
                   className="line-clamp-2 min-h-12 text-sm font-medium leading-5 text-[#252525] hover:text-[#00a99d]"
                 >
-                  {product.name}
+                  {t(product.name)}
                 </Link>
 
                 <p className="mt-1 text-sm text-gray-500">
@@ -299,7 +330,7 @@ export default function Clothing() {
                 <div className="mt-3 flex flex-wrap items-center gap-2">
                   {product.quote ? (
                     <span className="font-bold text-[#252525]">
-                      Request a Quote
+                      {t("Request a Quote")}
                     </span>
                   ) : (
                     <>

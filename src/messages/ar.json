@@ -1,0 +1,42 @@
+
+{
+  "Language": {
+    "english": "English",
+    "arabic": "العربية"
+  },
+  "TopBar": {
+    "contact": "اتصل بنا",
+    "sellOnModesy": "بع على ",
+    "location": "الموقع",
+    "reset": "إعادة تعيين"
+  },
+  "Header": {
+    "search": "ابحث عن المنتجات...",
+    "wishlist": "المفضلة",
+    "cart": "سلة التسوق",
+    "sellNow": "بع الآن"
+  },
+  "Navigation": {
+    "clothing": "ملابس",
+    "shoes": "أحذية",
+    "homeLiving": "المنزل والمعيشة",
+    "jewelryAccessories": "المجوهرات والإكسسوارات",
+    "toysEntertainment": "الألعاب والترفيه",
+    "graphicsPhotos": "الرسومات والصور",
+    "videoAudio": "الفيديو والصوت",
+    "webTemplatesCode": "قوالب الويب والأكواد"
+  },
+  "HeroBanner": {
+  "slide1Title": "اشترِ ملابس جميلة وفريدة",
+  "slide1Description": "اكتشف أساسيات الجودة المتميزة وأحدث صيحات الموضة بأسعار مناسبة",
+  "slide2Title": "اكتشف أسلوبك الخاص",
+  "slide2Description": "استكشف الأزياء الفريدة واعثر على المنتجات التي تناسب أسلوبك",
+  "slide3Title": "اعثر على شيء مميز",
+  "slide3Description": "تصفح منتجات رائعة واكتشف قطعتك المفضلة التالية",
+  "exploreNow": "اكتشف الآن"
+ },
+ "AuthButtons": {
+  "login": "تسجيل الدخول",
+  "register": "إنشاء حساب"
+ }
+}

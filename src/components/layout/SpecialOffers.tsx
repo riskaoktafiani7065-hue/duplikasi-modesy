@@ -2,6 +2,7 @@
 "use client";
 
 import Link from "next/link";
+import { useLocale } from "next-intl";
 import { useCurrency } from "@/components/layout/CurrencyContext";
 
 const products = [
@@ -67,13 +68,35 @@ const products = [
   },
 ];
 
+const arabicTranslations: Record<string, string> = {
+  "Special Offers": "عروض خاصة",
+  "Animal colorful digital prints": "مطبوعات رقمية ملونة للحيوانات",
+  "Summer fashion top lace": "بلوزة صيفية من الدانتيل",
+  "Women lace blouse with different colors":
+    "بلوزة نسائية من الدانتيل بألوان مختلفة",
+  "Floral women sundress": "فستان نسائي صيفي مزهر",
+  "Gucci nylon fabric smart backpack":
+    "حقيبة ظهر ذكية من قماش النايلون",
+  "Black sneakers with white sole": "حذاء رياضي أسود بنعل أبيض",
+  "Add to cart": "أضف إلى السلة",
+  "Add to wishlist": "أضف إلى المفضلة",
+  "Summer Collection": "تشكيلة الصيف",
+  "Autumn Sale": "تخفيضات الخريف",
+};
+
+function translateText(text: string, locale: string): string {
+  if (locale !== "ar") return text;
+  return arabicTranslations[text] ?? text;
+}
+
 export default function SpecialOffers() {
   const { formatPrice } = useCurrency();
+  const locale = useLocale();
 
   return (
     <section className="bg-white px-5 py-8 sm:px-6">
       <h2 className="mb-7 text-2xl font-bold text-[#252525]">
-        Special Offers
+        {translateText("Special Offers", locale)}
       </h2>
 
       {/* Daftar produk */}
@@ -88,7 +111,7 @@ export default function SpecialOffers() {
               <div className="relative aspect-[4/4.1] overflow-hidden bg-gray-100">
                 <img
                   src={product.image}
-                  alt={product.name}
+                  alt={translateText(product.name, locale)}
                   className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
                 />
 
@@ -102,7 +125,7 @@ export default function SpecialOffers() {
             <div className="pointer-events-none invisible absolute right-3 top-3 z-10 flex flex-col gap-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
               <button
                 type="button"
-                aria-label={`Add ${product.name} to cart`}
+                aria-label={`${translateText("Add to cart", locale)}: ${translateText(product.name, locale)}`}
                 className="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-full bg-white/95 text-gray-700 shadow-md transition hover:bg-[#00a99d] hover:text-white"
               >
                 <svg
@@ -124,7 +147,7 @@ export default function SpecialOffers() {
 
               <button
                 type="button"
-                aria-label={`Add ${product.name} to wishlist`}
+                aria-label={`${translateText("Add to wishlist", locale)}: ${translateText(product.name, locale)}`}
                 className="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-full bg-white/95 text-gray-700 shadow-md transition hover:bg-[#00a99d] hover:text-white"
               >
                 <svg
@@ -149,7 +172,7 @@ export default function SpecialOffers() {
                 href="/products"
                 className="line-clamp-2 min-h-12 text-base font-medium leading-6 text-[#222] hover:text-[#00a99d]"
               >
-                {product.name}
+                {translateText(product.name, locale)}
               </Link>
 
               <p className="mt-1 text-sm text-gray-500">
@@ -160,7 +183,11 @@ export default function SpecialOffers() {
               <div className="mt-2 flex items-center justify-between gap-1">
                 <div
                   className="whitespace-nowrap text-lg tracking-[-2px]"
-                  aria-label={`${product.rating} out of 5 stars`}
+                  aria-label={
+                    locale === "ar"
+                      ? `${product.rating} من أصل 5 نجوم`
+                      : `${product.rating} out of 5 stars`
+                  }
                 >
                   {Array.from({ length: 5 }, (_, index) => (
                     <span
@@ -201,11 +228,11 @@ export default function SpecialOffers() {
         <Link
           href="/products"
           className="block overflow-hidden"
-          aria-label="Summer Collection"
+          aria-label={translateText("Summer Collection", locale)}
         >
           <img
             src="https://modesy.codingest.net/uploads/blocks/202508/block_68b02a364b90c6-71529931.webp"
-            alt="Summer Collection"
+            alt={translateText("Summer Collection", locale)}
             className="h-auto w-full object-cover"
           />
         </Link>
@@ -213,11 +240,11 @@ export default function SpecialOffers() {
         <Link
           href="/products"
           className="block overflow-hidden"
-          aria-label="Autumn Sale"
+          aria-label={translateText("Autumn Sale", locale)}
         >
           <img
             src="https://modesy.codingest.net/uploads/blocks/202508/block_68b02a59a1d144-08234125.webp"
-            alt="Autumn Sale"
+            alt={translateText("Autumn Sale", locale)}
             className="h-auto w-full object-cover"
           />
         </Link>

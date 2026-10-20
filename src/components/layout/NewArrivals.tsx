@@ -1,5 +1,7 @@
+
 "use client";
 
+import { useLocale } from "next-intl";
 import { useCurrency } from "@/components/layout/CurrencyContext";
 import Link from "next/link";
 
@@ -111,21 +113,54 @@ const products = [
   },
 ];
 
+const arabicTranslations: Record<string, string> = {
+  "New Arrivals": "وصل حديثًا",
+  "View All": "عرض الكل",
+  "Request a Quote": "اطلب عرض سعر",
+  "Colorful women scarves": "أوشحة نسائية ملونة",
+  "Women's ankle boot with different colors":
+    "أحذية نسائية قصيرة بألوان مختلفة",
+  "Navy polka dot dress": "فستان كحلي منقط",
+  "Modern grey couch and pillows": "أريكة رمادية عصرية مع وسائد",
+  "Black fashion women backpack": "حقيبة ظهر نسائية سوداء أنيقة",
+  "Handcrafted decorative pillow for a luxurious touch":
+    "وسادة ديكور مصنوعة يدويًا بلمسة فاخرة",
+  "Black midi skirt with white flowers": "تنورة سوداء متوسطة الطول بزهور بيضاء",
+  "Women kipling bailey saddle handbag": "حقيبة يد نسائية من كيبلينغ",
+  "Animal colorful digital prints": "مطبوعات رقمية ملونة للحيوانات",
+  "Floral women sundress": "فستان نسائي صيفي مزهر",
+  "Seychelles women's brown ankle bootie":
+    "حذاء نسائي بني قصير من سيشلز",
+  "Ship illustration royalty free image":
+    "رسم توضيحي لسفينة خالٍ من حقوق الملكية",
+  "Add to cart": "أضف إلى السلة",
+  "Add to wishlist": "أضف إلى المفضلة",
+  "New Summer Collection": "تشكيلة الصيف الجديدة",
+  "Limited Time Sale": "تخفيضات لفترة محدودة",
+  "Summer Collection Sale": "تخفيضات تشكيلة الصيف",
+};
+
+function translateText(text: string, locale: string): string {
+  if (locale !== "ar") return text;
+  return arabicTranslations[text] ?? text;
+}
+
 export default function NewArrivals() {
   const { formatPrice } = useCurrency();
+  const locale = useLocale();
 
   return (
     <section className="bg-white px-5 py-12 sm:px-6">
       <div className="mb-7 flex items-center justify-between">
         <h2 className="text-2xl font-bold text-[#252525]">
-          New Arrivals
+          {translateText("New Arrivals", locale)}
         </h2>
 
         <Link
           href="/products"
           className="text-sm text-gray-600 hover:text-[#00a99d]"
         >
-          View All →
+          {translateText("View All", locale)} →
         </Link>
       </div>
 
@@ -139,7 +174,7 @@ export default function NewArrivals() {
               <Link href="/products" className="block h-full">
                 <img
                   src={product.image}
-                  alt={product.name}
+                  alt={translateText(product.name, locale)}
                   className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
                 />
               </Link>
@@ -148,7 +183,7 @@ export default function NewArrivals() {
               <div className="pointer-events-none invisible absolute right-3 top-3 z-10 flex flex-col gap-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
                 <button
                   type="button"
-                  aria-label={`Add ${product.name} to cart`}
+                  aria-label={`${translateText("Add to cart", locale)}: ${translateText(product.name, locale)}`}
                   className="pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full bg-white text-gray-700 shadow-md hover:bg-[#00a99d] hover:text-white"
                 >
                   <svg
@@ -170,7 +205,7 @@ export default function NewArrivals() {
 
                 <button
                   type="button"
-                  aria-label={`Add ${product.name} to wishlist`}
+                  aria-label={`${translateText("Add to wishlist", locale)}: ${translateText(product.name, locale)}`}
                   className="pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full bg-white text-gray-700 shadow-md hover:bg-[#00a99d] hover:text-white"
                 >
                   <svg
@@ -195,7 +230,7 @@ export default function NewArrivals() {
                 href="/products"
                 className="line-clamp-2 min-h-12 text-sm font-medium leading-5 text-[#252525] hover:text-[#00a99d]"
               >
-                {product.name}
+                {translateText(product.name, locale)}
               </Link>
 
               <p className="mt-1 text-sm text-gray-500">
@@ -205,7 +240,11 @@ export default function NewArrivals() {
               <div className="mt-2 flex items-center justify-between gap-1">
                 <div
                   className="whitespace-nowrap tracking-[-2px]"
-                  aria-label={`${product.rating} out of 5 stars`}
+                  aria-label={
+                    locale === "ar"
+                      ? `${product.rating} من أصل 5 نجوم`
+                      : `${product.rating} out of 5 stars`
+                  }
                 >
                   {Array.from({ length: 5 }, (_, i) => (
                     <span
@@ -228,7 +267,7 @@ export default function NewArrivals() {
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 {product.quote ? (
                   <span className="text-sm font-medium text-[#35a853]">
-                    Request a Quote
+                    {translateText("Request a Quote", locale)}
                   </span>
                 ) : (
                   <>
@@ -253,26 +292,38 @@ export default function NewArrivals() {
 
       {/* Tiga banner di bawah New Arrivals */}
       <div className="mt-16 grid grid-cols-1 gap-6 md:grid-cols-3">
-        <Link href="/products" className="block overflow-hidden">
+        <Link
+          href="/products"
+          className="block overflow-hidden"
+          aria-label={translateText("New Summer Collection", locale)}
+        >
           <img
             src="https://modesy.codingest.net/uploads/blocks/202508/block_68b02a748392d5-47296084.webp"
-            alt="New Summer Collection"
+            alt={translateText("New Summer Collection", locale)}
             className="h-auto w-full object-cover transition duration-300 hover:opacity-90"
           />
         </Link>
 
-        <Link href="/products" className="block overflow-hidden">
+        <Link
+          href="/products"
+          className="block overflow-hidden"
+          aria-label={translateText("Limited Time Sale", locale)}
+        >
           <img
             src="https://modesy.codingest.net/uploads/blocks/202508/block_68b02b0fa06e09-81527750.webp"
-            alt="Limited Time Sale"
+            alt={translateText("Limited Time Sale", locale)}
             className="h-auto w-full object-cover transition duration-300 hover:opacity-90"
           />
         </Link>
 
-        <Link href="/products" className="block overflow-hidden">
+        <Link
+          href="/products"
+          className="block overflow-hidden"
+          aria-label={translateText("Summer Collection Sale", locale)}
+        >
           <img
             src="https://modesy.codingest.net/uploads/blocks/202508/block_68b02a91357c27-13557247.webp"
-            alt="Summer Collection Sale"
+            alt={translateText("Summer Collection Sale", locale)}
             className="h-auto w-full object-cover transition duration-300 hover:opacity-90"
           />
         </Link>

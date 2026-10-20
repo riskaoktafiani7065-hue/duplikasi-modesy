@@ -1,6 +1,8 @@
+
 "use client";
 
 import { useState } from "react";
+import { useLocale } from "next-intl";
 import { useCurrency } from "@/components/layout/CurrencyContext";
 import Link from "next/link";
 
@@ -104,9 +106,34 @@ const products = [
   },
 ];
 
+const arabicTranslations: Record<string, string> = {
+  "Jewelry & Accessories": "المجوهرات والإكسسوارات",
+  "View All": "عرض الكل",
+  "Request a Quote": "طلب عرض سعر",
+  "Previous product": "المنتج السابق",
+  "Next product": "المنتج التالي",
+  "Add to cart": "أضف إلى السلة",
+  "Add to wishlist": "أضف إلى المفضلة",
+  "Colorful women scarves": "أوشحة نسائية ملونة",
+  "Black fashion women backpack": "حقيبة ظهر نسائية سوداء أنيقة",
+  "Women kipling bailey saddle handbag": "حقيبة يد نسائية من كيبلينغ",
+  "Modern blue handbag": "حقيبة يد زرقاء عصرية",
+  "Sun hat for women protection cap": "قبعة شمسية نسائية واقية",
+  "Handmade cute handbag": "حقيبة يد لطيفة مصنوعة يدويًا",
+  "Women black leather handbag": "حقيبة يد نسائية من الجلد الأسود",
+  "Black gold fashion backpack": "حقيبة ظهر سوداء وذهبية أنيقة",
+  "Black bag over the shoulder": "حقيبة سوداء تُحمل على الكتف",
+  "Gucci nylon fabric smart backpack": "حقيبة ظهر ذكية من قماش غوتشي النايلون",
+};
+
 export default function JewelryAccessories() {
   const { formatPrice } = useCurrency();
+  const locale = useLocale();
+  const isArabic = locale === "ar";
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  const t = (text: string) =>
+    isArabic ? arabicTranslations[text] ?? text : text;
 
   const nextSlide = () => {
     setCurrentIndex((current) => (current + 1) % products.length);
@@ -128,14 +155,14 @@ export default function JewelryAccessories() {
       {/* Judul dan View All */}
       <div className="mb-7 flex items-center justify-between">
         <h2 className="text-2xl font-bold text-[#252525]">
-          Jewelry &amp; Accessories
+          {t("Jewelry & Accessories")}
         </h2>
 
         <Link
           href="/products"
           className="flex items-center gap-2 text-sm text-gray-600 transition hover:text-[#00a99d]"
         >
-          View All <span className="text-xl">→</span>
+          {t("View All")} <span className="text-xl">→</span>
         </Link>
       </div>
 
@@ -145,7 +172,7 @@ export default function JewelryAccessories() {
         <button
           type="button"
           onClick={prevSlide}
-          aria-label="Produk sebelumnya"
+          aria-label={t("Previous product")}
           className="absolute left-4 top-35 z-20 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-gray-800 shadow-md transition hover:bg-white"
         >
           <svg
@@ -167,7 +194,7 @@ export default function JewelryAccessories() {
         <button
           type="button"
           onClick={nextSlide}
-          aria-label="Produk berikutnya"
+          aria-label={t("Next product")}
           className="absolute right-4 top-35 z-20 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-gray-800 shadow-md transition hover:bg-white"
         >
           <svg
@@ -197,7 +224,7 @@ export default function JewelryAccessories() {
                 <Link href="/products" className="block h-full">
                   <img
                     src={product.image}
-                    alt={product.name}
+                    alt={t(product.name)}
                     loading="lazy"
                     className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
                   />
@@ -207,7 +234,7 @@ export default function JewelryAccessories() {
                 <div className="pointer-events-none invisible absolute right-3 top-3 z-10 flex flex-col gap-3 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
                   <button
                     type="button"
-                    aria-label={`Tambah ${product.name} ke keranjang`}
+                    aria-label={`${t("Add to cart")} ${t(product.name)}`}
                     className="pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full bg-white text-gray-700 shadow-md transition hover:bg-[#00a99d] hover:text-white"
                   >
                     <svg
@@ -229,7 +256,7 @@ export default function JewelryAccessories() {
 
                   <button
                     type="button"
-                    aria-label={`Tambah ${product.name} ke wishlist`}
+                    aria-label={`${t("Add to wishlist")} ${t(product.name)}`}
                     className="pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full bg-white text-gray-700 shadow-md transition hover:bg-[#00a99d] hover:text-white"
                   >
                     <svg
@@ -255,7 +282,7 @@ export default function JewelryAccessories() {
                   href="/products"
                   className="line-clamp-2 min-h-12 text-sm font-medium leading-5 text-[#252525] hover:text-[#00a99d]"
                 >
-                  {product.name}
+                  {t(product.name)}
                 </Link>
 
                 <p className="mt-1 text-sm text-gray-500">
@@ -289,7 +316,7 @@ export default function JewelryAccessories() {
                 <div className="mt-3 flex flex-wrap items-center gap-2">
                   {product.quote ? (
                     <span className="text-sm font-medium text-[#252525]">
-                      Request a Quote
+                      {t("Request a Quote")}
                     </span>
                   ) : (
                     <>

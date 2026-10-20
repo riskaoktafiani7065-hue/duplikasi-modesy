@@ -1,6 +1,8 @@
+
 "use client";
 
 import Link from "next/link";
+import { useLocale } from "next-intl";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const posts = [
@@ -70,6 +72,63 @@ const posts = [
   },
 ];
 
+const arabicTranslations: Record<string, string> = {
+  "Latest Blog Posts": "أحدث مقالات المدونة",
+  "Life Style": "نمط الحياة",
+  Fashion: "الأزياء",
+  Business: "الأعمال",
+
+  "Essential travel packing tips for fashion lovers":
+    "نصائح أساسية لتوضيب الأمتعة لعشاق الموضة",
+  "Stay stylish and organized on your trips with these smart packing hacks.":
+    "حافظ على أناقتك وتنظيم أمتعتك أثناء السفر باستخدام هذه النصائح الذكية.",
+
+  "The psychology of colors in fashion":
+    "سيكولوجية الألوان في عالم الموضة",
+  "Learn how the colors you wear influence mood, confidence, and perception.":
+    "اكتشف كيف تؤثر الألوان التي ترتديها في مزاجك وثقتك بنفسك وانطباع الآخرين عنك.",
+
+  "Gift ideas for every budget from affordable to luxury":
+    "أفكار هدايا تناسب جميع الميزانيات من الاقتصادية إلى الفاخرة",
+  "Find the perfect gift without breaking the bank. Our ideas suit every budget.":
+    "اعثر على الهدية المثالية دون إنفاق الكثير من المال. لدينا أفكار تناسب جميع الميزانيات.",
+
+  "A beginner's guide to home fragrances":
+    "دليل المبتدئين لعطور المنزل",
+  "Learn how scents can transform your atmosphere and boost your mood.":
+    "تعرّف على كيفية تغيير الروائح لأجواء منزلك وتحسين مزاجك.",
+
+  "Must-have accessories to elevate your everyday look":
+    "إكسسوارات أساسية لإضفاء الأناقة على إطلالتك اليومية",
+  "Small details make a big difference. Discover the top accessories you need right now.":
+    "التفاصيل الصغيرة تصنع فرقًا كبيرًا. اكتشف أهم الإكسسوارات التي تحتاج إليها.",
+
+  "Why sustainable fashion matters more than ever":
+    "لماذا أصبحت الموضة المستدامة أكثر أهمية من أي وقت مضى",
+  "Understand the importance of eco-friendly choices in fashion and how you can make a difference.":
+    "تعرّف على أهمية الخيارات الصديقة للبيئة في عالم الموضة وكيف يمكنك المساهمة في التغيير.",
+
+  "How to pick the right shoes for comfort and style":
+    "كيفية اختيار الأحذية المناسبة للراحة والأناقة",
+  "Find out how to balance fashion and comfort when choosing your footwear.":
+    "اكتشف كيفية الجمع بين الأناقة والراحة عند اختيار أحذيتك.",
+
+  "How to choose the perfect outfit for every occasion":
+    "كيفية اختيار الإطلالة المثالية لكل مناسبة",
+  "Learn how to style yourself with the right outfit for casual, formal, and special events.":
+    "تعلّم كيفية اختيار الإطلالة المناسبة للمناسبات اليومية والرسمية والخاصة.",
+
+  "3 months ago": "منذ 3 أشهر",
+  "Read article": "اقرأ المقال",
+  "Previous article": "المقال السابق",
+  "Next article": "المقال التالي",
+};
+
+function translateText(text: string, locale: string) {
+  if (locale !== "ar") return text;
+  return arabicTranslations[text] ?? text;
+}
+
 function CategoryIcon() {
   return (
     <svg
@@ -102,9 +161,12 @@ function ClockIcon() {
 }
 
 export default function LatestBlogPosts() {
+  const locale = useLocale();
   const sliderRef = useRef<HTMLDivElement>(null);
   const [canGoLeft, setCanGoLeft] = useState(false);
   const [canGoRight, setCanGoRight] = useState(true);
+
+  const t = (text: string) => translateText(text, locale);
 
   const updateButtons = useCallback(() => {
     const slider = sliderRef.current;
@@ -144,9 +206,8 @@ export default function LatestBlogPosts() {
 
     if (!card) return;
 
-    const gap = Number.parseFloat(
-      window.getComputedStyle(slider).columnGap
-    ) || 24;
+    const gap =
+      Number.parseFloat(window.getComputedStyle(slider).columnGap) || 24;
 
     const distance = card.getBoundingClientRect().width + gap;
 
@@ -160,7 +221,7 @@ export default function LatestBlogPosts() {
     <section className="bg-white px-5 pb-16 pt-10 sm:px-8 lg:px-10">
       <div className="mx-auto max-w-330">
         <h2 className="mb-7 text-[25px] font-semibold leading-tight text-[#222222] sm:text-[27px]">
-          Latest Blog Posts
+          {t("Latest Blog Posts")}
         </h2>
 
         <div className="relative">
@@ -176,13 +237,13 @@ export default function LatestBlogPosts() {
               >
                 <Link
                   href="/blog"
-                  aria-label={`Read ${post.title}`}
+                  aria-label={`${t("Read article")}: ${t(post.title)}`}
                   className="group block overflow-hidden bg-[#f7f7f7]"
                 >
                   <div className="aspect-500/332 overflow-hidden">
                     <img
                       src={post.image}
-                      alt={post.title}
+                      alt={t(post.title)}
                       loading={index < 4 ? "eager" : "lazy"}
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
@@ -193,23 +254,23 @@ export default function LatestBlogPosts() {
                   href="/blog"
                   className="mt-4 block text-[19px] font-medium leading-[1.4] text-[#262626] transition-colors hover:text-[#00a99d] sm:text-[20px]"
                 >
-                  {post.title}
+                  {t(post.title)}
                 </Link>
 
                 <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-[13px] text-[#777777]">
                   <span className="inline-flex items-center gap-2">
                     <CategoryIcon />
-                    {post.category}
+                    {t(post.category)}
                   </span>
 
                   <span className="inline-flex items-center gap-2">
                     <ClockIcon />
-                    3 months ago
+                    {t("3 months ago")}
                   </span>
                 </div>
 
                 <p className="mt-3 text-[15px] leading-[1.75] text-[#777777]">
-                  {post.description}
+                  {t(post.description)}
                 </p>
               </article>
             ))}
@@ -217,7 +278,7 @@ export default function LatestBlogPosts() {
 
           <button
             type="button"
-            aria-label="Artikel sebelumnya"
+            aria-label={t("Previous article")}
             onClick={() => move(-1)}
             disabled={!canGoLeft}
             className="absolute left-3 top-25 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white text-[30px] leading-none text-[#333333] shadow-md transition hover:bg-[#f5f5f5] disabled:pointer-events-none disabled:opacity-0 sm:left-4 sm:h-12 sm:w-12"
@@ -227,7 +288,7 @@ export default function LatestBlogPosts() {
 
           <button
             type="button"
-            aria-label="Artikel berikutnya"
+            aria-label={t("Next article")}
             onClick={() => move(1)}
             disabled={!canGoRight}
             className="absolute right-3 top-25 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white text-[30px] leading-none text-[#333333] shadow-md transition hover:bg-[#f5f5f5] disabled:pointer-events-none disabled:opacity-0 sm:right-4 sm:h-12 sm:w-12"

@@ -1,0 +1,42 @@
+
+{
+  "Language": {
+    "english": "English",
+    "arabic": "Arabic"
+  },
+  "TopBar": {
+    "contact": "Contact",
+    "sellOnModesy": "Sell on Modesy",
+    "location": "Location",
+    "reset": "Reset"
+  },
+  "Header": {
+    "search": "Search for products, categories or brands",
+    "wishlist": "Wishlist",
+    "cart": "Cart",
+    "sellNow": "Sell Now"
+  },
+  "Navigation": {
+    "clothing": "Clothing",
+    "shoes": "Shoes",
+    "homeLiving": "Home & Living",
+    "jewelryAccessories": "Jewelry & Accessories",
+    "toysEntertainment": "Toys & Entertainment",
+    "graphicsPhotos": "Graphics & Photos",
+    "videoAudio": "Video & Audio",
+    "webTemplatesCode": "Web Templates & Code"
+  },
+  "HeroBanner": {
+  "slide1Title": "Buy Nice and Unique Clothes",
+  "slide1Description": "Discover quality premium basics and trendy essentials at surprisingly affordable prices",
+  "slide2Title": "Discover Your Style",
+  "slide2Description": "Explore unique fashion and find products that match your style",
+  "slide3Title": "Find Something Special",
+  "slide3Description": "Browse exciting finds and discover your next favorite item",
+  "exploreNow": "Explore Now"
+  },
+  "AuthButtons": {
+  "login": "Login",
+  "register": "Register"
+}
+}

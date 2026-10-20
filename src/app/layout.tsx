@@ -1,4 +1,5 @@
-﻿import type { Metadata } from "next";
+﻿
+import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import AuthModals from "@/components/auth/AuthModals";
@@ -17,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id">
+    <html lang="en">
       <body className={`${inter.className} min-h-full flex flex-col`}>
         <CurrencyProvider>
           {children}

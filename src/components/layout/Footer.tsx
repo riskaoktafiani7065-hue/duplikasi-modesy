@@ -1,4 +1,8 @@
+
+"use client";
+
 import Link from "next/link";
+import { useLocale } from "next-intl";
 import {
   FaFacebookF,
   FaInstagram,
@@ -16,14 +20,14 @@ import {
 import { FaXTwitter } from "react-icons/fa6";
 
 const categories = [
-  "Clothing",
-  "Shoes",
-  "Home & Living",
-  "Jewelry & Accessories",
-  "Toys & Entertainment",
-  "Graphics & Photos",
-  "Video & Audio",
-  "Web Templates & Code",
+  ["Clothing", "ملابس"],
+  ["Shoes", "أحذية"],
+  ["Home & Living", "المنزل والمعيشة"],
+  ["Jewelry & Accessories", "المجوهرات والإكسسوارات"],
+  ["Toys & Entertainment", "ألعاب وترفيه"],
+  ["Graphics & Photos", "رسومات وصور"],
+  ["Video & Audio", "فيديو وصوت"],
+  ["Web Templates & Code", "قوالب ويب وأكواد"],
 ];
 
 const socialLinks = [
@@ -43,42 +47,52 @@ const socialLinks = [
 ];
 
 const quickLinks = [
-  { name: "Home", href: "/" },
-  { name: "Blog", href: "/blog" },
-  { name: "Shops", href: "/shops" },
-  { name: "Help Center", href: "/help" },
+  ["Home", "الرئيسية", "/"],
+  ["Blog", "مدونة", "/blog"],
+  ["Shops", "محلات", "/shops"],
+  ["Help Center", "مركز المساعدة", "/help"],
 ];
 
 const informationLinks = [
-  { name: "Terms & Conditions", href: "/terms" },
-  { name: "About Us", href: "/about" },
+  ["Terms & Conditions", "البنود والشروط", "/terms"],
+  ["About Us", "من نحن", "/about"],
 ];
 
 export default function Footer() {
+  const locale = useLocale();
+  const ar = locale === "ar";
+
   return (
     <footer className="mt-12 bg-[#fafafd] text-[#222222]">
-      {/* Bagian utama footer */}
-      <div className="grid grid-cols-1 gap-10 px-5 py-12 sm:px-8 lg:grid-cols-4 lg:gap-12 lg:px-5 lg:py-20">
-        {/* Logo dan deskripsi */}
-        <div>
-          <Link href="/" className="inline-block" aria-label="Modesy Home">
+      {/* Empat kolom: urutannya selalu sama seperti referensi */}
+      <div className="grid grid-cols-1 gap-10 px-5 py-12 sm:px-8 lg:grid-cols-[1.45fr_0.8fr_0.8fr_1.25fr] lg:gap-12 lg:px-5 lg:py-20">
+
+        {/* Kolom 1: Logo, deskripsi, media sosial */}
+        <div className="min-w-0">
+          <Link
+            href={ar ? "/ar" : "/en"}
+            className="inline-block"
+            aria-label="Modesy Home"
+          >
             <span className="text-[44px] font-bold tracking-tight text-[#484848]">
               M<span className="text-[#00a99d]">o</span>desy
             </span>
           </Link>
 
-          <p className="mt-5 text-base leading-8 text-[#666666]">
-            Modesy is a modern e-commerce marketplace where buyers and
-            sellers connect with ease. Whether you are looking to shop
-            for unique items or grow your business by selling online,
-            Modesy is here to help you every step of the way.
+          <p
+            dir={ar ? "rtl" : "ltr"}
+            className={`mt-5 text-base leading-8 text-[#666666] ${
+              ar ? "text-right" : "text-left"
+            }`}
+          >
+            {ar
+              ? "موديزي هو سوق تجارة إلكترونية حديث يربط بين المشترين والبائعين بسهولة. سواء كنت تبحث عن منتجات فريدة للتسوق أو ترغب في تنمية عملك من خلال البيع عبر الإنترنت، فإن موديزي هنا لمساعدتك في كل خطوة."
+              : "Modesy is a modern e-commerce marketplace where buyers and sellers connect with ease. Whether you are looking to shop for unique items or grow your business by selling online, Modesy is here to help you every step of the way."}
           </p>
 
-          
-          {/* Social media */}
           <nav
             aria-label="Social media"
-            className="mt-6 grid w-fit grid-cols-4 gap-x-3.5 gap-y-3.5 sm:grid-cols-5 lg:grid-cols-4"
+            className="mt-6 grid w-fit grid-cols-7 gap-x-3 gap-y-3"
           >
             {socialLinks.map(({ name, icon: Icon, url }) => (
               <a
@@ -92,7 +106,7 @@ export default function Footer() {
                     ? "noopener noreferrer"
                     : undefined
                 }
-                className="box-border flex h-14.25 w-14.25 shrink-0 items-center justify-center rounded-full border border-[#c8c8c8] bg-transparent text-[#82796f] transition-colors duration-200 hover:border-[#00a99d] hover:text-[#00a99d]"
+                className="flex h-12 w-12 items-center justify-center rounded-full border border-[#c8c8c8] bg-transparent text-[#82796f] transition-colors duration-200 hover:border-[#00a99d] hover:text-[#00a99d]"
               >
                 <Icon size={21} aria-hidden="true" />
               </a>
@@ -100,117 +114,207 @@ export default function Footer() {
           </nav>
         </div>
 
-        {/* Categories */}
-        <div>
-          <h3 className="mb-6 text-xl font-medium">CATEGORIES</h3>
+        {/* Kolom 2: Categories */}
+        <div className="min-w-0">
+          <h3
+            dir={ar ? "rtl" : "ltr"}
+            className={`mb-6 text-xl font-medium ${
+              ar ? "text-right" : "text-left"
+            }`}
+          >
+            {ar ? "الفئات" : "CATEGORIES"}
+          </h3>
 
           <ul className="space-y-4">
-            {categories.map((category) => (
-              <li key={category}>
+            {categories.map(([en, arabic]) => (
+              <li key={en}>
                 <Link
-                  href="/products"
-                  className="text-base text-[#333333] transition hover:text-[#00a99d]"
+                  href={ar ? "/ar/products" : "/en/products"}
+                  dir={ar ? "rtl" : "ltr"}
+                  className={`block text-base text-[#333333] transition hover:text-[#00a99d] ${
+                    ar ? "text-right" : "text-left"
+                  }`}
                 >
-                  {category}
+                  {ar ? arabic : en}
                 </Link>
               </li>
             ))}
           </ul>
         </div>
 
-        {/* Quick links dan information */}
-        <div>
-          <h3 className="mb-6 text-xl font-medium">QUICK LINKS</h3>
+        {/* Kolom 3: Quick links dan Information */}
+        <div className="min-w-0">
+          <h3
+            dir={ar ? "rtl" : "ltr"}
+            className={`mb-6 text-xl font-medium ${
+              ar ? "text-right" : "text-left"
+            }`}
+          >
+            {ar ? "روابط سريعة" : "QUICK LINKS"}
+          </h3>
 
           <ul className="space-y-4">
-            {quickLinks.map((item) => (
-              <li key={item.name}>
+            {quickLinks.map(([en, arabic, href]) => (
+              <li key={en}>
                 <Link
-                  href={item.href}
-                  className="text-base text-[#333333] transition hover:text-[#00a99d]"
+                  href={ar ? `/ar${href === "/" ? "" : href}` : `/en${href === "/" ? "" : href}`}
+                  dir={ar ? "rtl" : "ltr"}
+                  className={`block text-base text-[#333333] transition hover:text-[#00a99d] ${
+                    ar ? "text-right" : "text-left"
+                  }`}
                 >
-                  {item.name}
+                  {ar ? arabic : en}
                 </Link>
               </li>
             ))}
           </ul>
 
-          <h3 className="mb-6 mt-10 text-xl font-medium">INFORMATION</h3>
+          <h3
+            dir={ar ? "rtl" : "ltr"}
+            className={`mb-6 mt-10 text-xl font-medium ${
+              ar ? "text-right" : "text-left"
+            }`}
+          >
+            {ar ? "معلومات" : "INFORMATION"}
+          </h3>
 
           <ul className="space-y-4">
-            {informationLinks.map((item) => (
-              <li key={item.name}>
+            {informationLinks.map(([en, arabic, href]) => (
+              <li key={en}>
                 <Link
-                  href={item.href}
-                  className="text-base text-[#333333] transition hover:text-[#00a99d]"
+                  href={ar ? `/ar${href}` : `/en${href}`}
+                  dir={ar ? "rtl" : "ltr"}
+                  className={`block text-base text-[#333333] transition hover:text-[#00a99d] ${
+                    ar ? "text-right" : "text-left"
+                  }`}
                 >
-                  {item.name}
+                  {ar ? arabic : en}
                 </Link>
               </li>
             ))}
           </ul>
         </div>
 
-        {/* Newsletter */}
-        <div>
-          <div className="mt-5 space-y-3">
+        {/* Kolom 4: Newsletter dan pembayaran */}
+        <div className="min-w-0">
+          <h3
+            dir={ar ? "rtl" : "ltr"}
+            className={`mb-6 text-xl font-medium ${
+              ar ? "text-right" : "text-left"
+            }`}
+          >
+            {ar ? "النشرة الإخبارية" : "NEWSLETTER"}
+          </h3>
+
+          <p
+            dir={ar ? "rtl" : "ltr"}
+            className={`text-base leading-8 text-[#666666] ${
+              ar ? "text-right" : "text-left"
+            }`}
+          >
+            {ar
+              ? "انضم إلى قائمة المشتركين لدينا للحصول على أحدث الأخبار والتحديثات والعروض الخاصة مباشرة في صندوق الوارد الخاص بك."
+              : "Join our subscriber list to receive the latest news, updates and special offers directly in your inbox."}
+          </p>
+
+          <form
+            className="mt-5 space-y-3"
+            onSubmit={(event) => event.preventDefault()}
+          >
             <input
               type="email"
               name="email"
-              placeholder="Enter your email"
-              aria-label="Your email address"
-              className="h-15.5 w-full rounded border border-gray-200 bg-white px-6 text-base outline-none transition focus:border-[#00a99d]"
+              placeholder={ar ? "أدخل بريدك الإلكتروني" : "Enter your email"}
+              aria-label={ar ? "بريدك الإلكتروني" : "Your email address"}
+              dir={ar ? "rtl" : "ltr"}
+              className="h-16 w-full rounded border border-gray-200 bg-white px-6 text-base outline-none transition focus:border-[#00a99d]"
             />
 
             <button
-              type="button"
-              className="h-15.5 w-full rounded bg-[#00a99d] text-lg text-white transition hover:bg-[#008f85]"
+              type="submit"
+              className="h-16 w-full rounded bg-[#00a99d] text-lg text-white transition hover:bg-[#008f85]"
             >
-              Subscribe
+              {ar ? "الاشتراك" : "Subscribe"}
             </button>
-          </div>
+          </form>
 
           {/* Metode pembayaran */}
-          <div className="mt-8 flex flex-wrap items-center gap-3">
-            <span className="text-2xl font-black italic text-blue-700">
+          <div
+            className="mt-8 flex flex-nowrap items-center justify-between gap-2 overflow-hidden"
+            aria-label="Payment methods"
+          >
+            {/* VISA */}
+            <span className="shrink-0 text-[34px] font-black italic leading-none tracking-tight text-[#1434CB]">
               VISA
             </span>
 
+            {/* Mastercard */}
             <span
-              className="flex items-center"
+              className="relative flex h-9 w-12 shrink-0 items-center justify-center"
               aria-label="Mastercard"
               title="Mastercard"
             >
-              <span className="h-7 w-7 rounded-full bg-red-600" />
-              <span className="-ml-3 h-7 w-7 rounded-full bg-amber-500/90" />
+              <span className="absolute left-0 h-8 w-8 rounded-full bg-[#EB001B]" />
+              <span className="absolute right-0 h-8 w-8 rounded-full bg-[#F79E1B] opacity-95" />
+              <span className="absolute bottom-0.5 text-[7px] font-semibold text-black">
+                mastercard
+              </span>
             </span>
 
-            <span className="rounded bg-blue-700 px-2 py-1 text-xs font-bold text-white">
-              Maestro
+            {/* Maestro */}
+            <span
+              className="relative flex h-9 w-12 shrink-0 items-center justify-center"
+              aria-label="Maestro"
+              title="Maestro"
+            >
+              <span className="absolute left-0 h-8 w-8 rounded-full bg-[#0066B3]" />
+              <span className="absolute right-0 h-8 w-8 rounded-full bg-[#EB001B] opacity-95" />
+              <span className="relative z-10 rounded bg-[#0066B3] px-0.5 text-[10px] font-bold italic text-white">
+                Maestro
+              </span>
             </span>
 
-            <span className="rounded bg-blue-600 px-2 py-1 text-xs font-bold text-white">
-              AMEX
+            {/* American Express */}
+            <span className="flex h-9 w-14.25 shrink-0 flex-col items-center justify-center rounded-sm bg-[#2671C8] text-center text-[9px] font-black leading-2.5 text-white">
+              <span>AMERICAN</span>
+              <span>EXPRESS</span>
             </span>
 
-            <span className="rounded bg-orange-500 px-2 py-1 text-xs font-bold text-white">
-              DISCOVER
+            {/* Discover */}
+            <span className="relative flex h-9 w-14.25 shrink-0 flex-col items-center justify-center overflow-hidden rounded-sm bg-[#f4f4f4] text-center text-[9px] font-black leading-2.5 text-black">
+              <span>DISCOVER</span>
+              <span className="text-[5px] font-normal">NETWORK</span>
+              <span className="absolute -bottom-3 -right-2 h-7 w-10 rotate-[-25deg] bg-[#F58220]" />
             </span>
           </div>
-        </div>
+        </div>  
       </div>
 
       {/* Copyright */}
       <div className="mx-5 flex flex-col gap-4 border-t border-gray-200 py-6 text-sm text-[#666666] sm:mx-8 sm:flex-row sm:items-center sm:justify-between lg:mx-5">
-        <p>Copyright 2025 Modesy - All Rights Reserved.</p>
+        <p dir={ar ? "rtl" : "ltr"}>
+          {ar
+            ? "حقوق النشر 2025 موديزي - جميع الحقوق محفوظة."
+            : "Copyright 2025 Modesy - All Rights Reserved."}
+        </p>
 
-        <div className="flex flex-wrap gap-5">
-          <Link href="/privacy" className="transition hover:text-[#00a99d]">
-            Privacy Policy
+        <div
+          className={`flex flex-wrap gap-5 ${
+            ar ? "flex-row-reverse" : ""
+          }`}
+        >
+          <Link
+            href={ar ? "/ar/privacy" : "/en/privacy"}
+            className="transition hover:text-[#00a99d]"
+          >
+            {ar ? "سياسة الخصوصية" : "Privacy Policy"}
           </Link>
 
-          <Link href="/cookies" className="transition hover:text-[#00a99d]">
-            Cookie Policy
+          <Link
+            href={ar ? "/ar/cookies" : "/en/cookies"}
+            className="transition hover:text-[#00a99d]"
+          >
+            {ar ? "سياسة ملفات تعريف الارتباط" : "Cookie Policy"}
           </Link>
         </div>
       </div>

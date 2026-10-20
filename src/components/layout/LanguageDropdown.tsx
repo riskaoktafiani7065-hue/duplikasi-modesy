@@ -1,11 +1,13 @@
+
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname, useRouter } from "@/i18n/navigation";
 
 const languages = [
   {
     code: "en",
-    name: "Bahasa inggris",
+    name: "English",
     flag: "https://flagcdn.com/w40/us.png",
   },
   {
@@ -13,12 +15,25 @@ const languages = [
     name: "Arab",
     flag: "https://flagcdn.com/w40/sa.png",
   },
-];
+] as const;
 
 export default function LanguageDropdown() {
-  const [selectedLanguage, setSelectedLanguage] = useState(languages[1]);
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const [selectedLanguage, setSelectedLanguage] =
+    useState<(typeof languages)[number]>(languages[0]);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const currentLocale = window.location.pathname.split("/")[1];
+    const language =
+      languages.find((item) => item.code === currentLocale) ??
+      languages[0];
+
+    setSelectedLanguage(language);
+  }, []);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -37,8 +52,18 @@ export default function LanguageDropdown() {
     };
   }, []);
 
+  function changeLanguage(locale: "en" | "ar") {
+    const language =
+      languages.find((item) => item.code === locale) ?? languages[0];
+
+    setSelectedLanguage(language);
+    setIsOpen(false);
+    router.replace(pathname, { locale });
+  }
+
   return (
     <div ref={dropdownRef} className="relative z-50">
+      
       <button
         type="button"
         onClick={() => setIsOpen((open) => !open)}
@@ -51,7 +76,7 @@ export default function LanguageDropdown() {
           className="h-3.5 w-5 object-cover"
         />
 
-        <span>{selectedLanguage.name === "Bahasa inggris" ? "English" : "Arab"}</span>
+        <span>{selectedLanguage.name}</span>
 
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -63,13 +88,12 @@ export default function LanguageDropdown() {
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className={`transition-transform ${
-            isOpen ? "rotate-180" : ""
-          }`}
+          className={`transition-transform ${isOpen ? "rotate-180" : ""}`}
         >
           <path d="m6 9 6 6 6-6" />
         </svg>
       </button>
+
 
       {isOpen && (
         <div className="absolute right-0 top-full mt-5 w-62.5 rounded-md border border-[#e5e5e5] bg-white py-2 shadow-sm">
@@ -77,10 +101,7 @@ export default function LanguageDropdown() {
             <button
               key={language.code}
               type="button"
-              onClick={() => {
-                setSelectedLanguage(language);
-                setIsOpen(false);
-              }}
+              onClick={() => changeLanguage(language.code)}
               className="flex w-full items-center gap-2 px-9 py-3 text-left text-[18px] text-[#808080] hover:bg-gray-50"
             >
               <img

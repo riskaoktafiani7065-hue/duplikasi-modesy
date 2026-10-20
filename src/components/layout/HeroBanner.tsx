@@ -2,6 +2,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 
 const slides = [
   {
@@ -27,19 +28,44 @@ const slides = [
   },
 ];
 
+const arabicSlides = [
+  {
+    title: "اشترِ ملابس جميلة وفريدة",
+    description:
+      "اكتشف أساسيات الجودة المتميزة وأحدث صيحات الموضة بأسعار مناسبة",
+  },
+  {
+    title: "اكتشف أسلوبك الخاص",
+    description:
+      "استكشف الأزياء الفريدة واعثر على المنتجات التي تناسب أسلوبك",
+  },
+  {
+    title: "اعثر على شيء مميز",
+    description:
+      "تصفح منتجات رائعة واكتشف قطعتك المفضلة التالية",
+  },
+];
+
 export default function HeroBanner() {
   const [active, setActive] = useState(0);
+  const locale = useLocale();
+  const t = useTranslations("HeroBanner");
+
   const slide = slides[active];
+  const isArabic = locale === "ar";
+  const translated = isArabic ? arabicSlides[active] : null;
 
   function changeSlide(direction: number) {
     setActive(
-      (current) =>
-        (current + direction + slides.length) % slides.length
+      (current) => (current + direction + slides.length) % slides.length
     );
   }
 
   return (
-    <section className="relative h-95 overflow-hidden bg-gray-200 sm:h-110 lg:h-130">
+    <section
+      className="relative h-95 overflow-hidden bg-gray-200 sm:h-110 lg:h-130"
+      dir="ltr"
+    >
       <div
         className="absolute inset-0 bg-cover bg-center transition-all duration-500"
         style={{ backgroundImage: `url("${slide.image}")` }}
@@ -49,19 +75,26 @@ export default function HeroBanner() {
 
       <div className="relative z-10 flex h-full items-center px-5 sm:px-10 lg:px-6">
         <div className="max-w-197.5 text-white">
-          <h1 className="text-4xl font-semibold leading-tight drop-shadow-md sm:text-5xl lg:text-6xl">
-            {slide.title}
+          <h1
+            dir={isArabic ? "rtl" : "ltr"}
+            className="text-4xl font-semibold leading-tight drop-shadow-md sm:text-5xl lg:text-6xl"
+          >
+            {translated?.title ?? t(`slide${active + 1}Title`)}
           </h1>
 
-          <p className="mt-5 max-w-195 text-lg leading-relaxed drop-shadow sm:text-xl">
-            {slide.description}
+          <p
+            dir={isArabic ? "rtl" : "ltr"}
+            className="mt-5 max-w-195 text-lg leading-relaxed drop-shadow sm:text-xl"
+          >
+            {translated?.description ??
+              t(`slide${active + 1}Description`)}
           </p>
 
           <a
             href="/products"
             className="mt-10 inline-flex rounded-sm bg-[#171717] px-8 py-4 text-base text-white transition hover:bg-[#00a99d]"
           >
-            Explore Now
+            {isArabic ? "اكتشف الآن" : t("exploreNow")}
           </a>
         </div>
       </div>

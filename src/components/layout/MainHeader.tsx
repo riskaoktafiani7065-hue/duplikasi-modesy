@@ -1,12 +1,15 @@
-﻿"use client";
+﻿
+"use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 export default function MainHeader() {
+  const t = useTranslations("Header");
+
   return (
     <header className="border-b border-gray-100 bg-white">
       <div className="mx-auto flex min-h-27.5 max-w-330 items-center gap-8 px-6">
-
         {/* Logo */}
         <Link
           href="/"
@@ -15,7 +18,7 @@ export default function MainHeader() {
         >
           M<span className="text-[#00a99d]">o</span>desy
         </Link>
-      
+
         {/* Search */}
         <form
           action="/products"
@@ -25,14 +28,14 @@ export default function MainHeader() {
           <input
             type="search"
             name="search"
-            placeholder="Search products..."
-            aria-label="Search products"
+            placeholder={t("search")}
+            aria-label={t("search")}
             className="h-full min-w-0 flex-1 bg-transparent px-5 text-sm text-gray-700 outline-none placeholder:text-gray-400"
           />
 
           <button
             type="submit"
-            aria-label="Search"
+            aria-label={t("search")}
             className="flex h-full w-14.5 shrink-0 items-center justify-center text-gray-600 transition hover:text-[#2563ff]"
           >
             <svg
@@ -64,7 +67,7 @@ export default function MainHeader() {
           >
             <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z" />
           </svg>
-          <span>Wishlist</span>
+          <span>{t("wishlist")}</span>
         </Link>
 
         {/* Cart */}
@@ -84,7 +87,7 @@ export default function MainHeader() {
             <circle cx="10" cy="20" r="1" />
             <circle cx="18" cy="20" r="1" />
           </svg>
-          <span>Cart</span>
+          <span>{t("cart")}</span>
         </Link>
 
         {/* Sell Now */}
@@ -92,7 +95,7 @@ export default function MainHeader() {
           href="/sell"
           className="flex h-12 shrink-0 items-center justify-center rounded-md bg-[#00a99d] px-6 text-sm font-semibold text-white transition hover:bg-[#008f85]"
         >
-          + Sell Now
+          + {t("sellNow")}
         </Link>
       </div>
     </header>

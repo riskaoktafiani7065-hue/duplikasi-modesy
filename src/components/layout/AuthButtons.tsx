@@ -1,13 +1,17 @@
-﻿"use client";
+﻿
+"use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
 import UserMenu from "./UserMenu";
+
 
 export default function AuthButtons() {
   const [user, setUser] = useState<any>(null);
   const [role, setRole] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const t = useTranslations("AuthButtons");
 
   useEffect(() => {
     const supabase = createClient();
@@ -37,7 +41,11 @@ export default function AuthButtons() {
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setUser(session?.user ?? null);
-        if (!session?.user) setRole(null);
+
+        if (!session?.user) {
+          setRole(null);
+        }
+
         if (session?.user) {
           supabase
             .from("profiles")
@@ -57,7 +65,9 @@ export default function AuthButtons() {
   }
 
   if (loading) {
-    return <div className="h-9 w-32 animate-pulse rounded-full bg-gray-100" />;
+    return (
+      <div className="h-9 w-32 animate-pulse rounded-full bg-gray-100" />
+    );
   }
 
   if (user) {
@@ -71,15 +81,17 @@ export default function AuthButtons() {
         onClick={() => openAuth("login")}
         className="text-[#444444] transition hover:text-[#00a99d]"
       >
-        Login
+        {t("login")}
       </button>
+
       <span className="text-gray-300">/</span>
+
       <button
         type="button"
         onClick={() => openAuth("register")}
         className="font-medium text-[#444444] transition hover:text-[#00a99d]"
       >
-        Register
+        {t("register")}
       </button>
     </div>
   );

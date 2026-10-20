@@ -1,133 +1,170 @@
-'use client';
 
-import { useState, useMemo } from 'react';
-import CustomSelect from '@/components/ui/CustomSelect';
-import { allCountries } from '@/lib/data/countries'; 
-import { State } from 'country-state-city'; 
+"use client";
 
-interface Props {
+import { useEffect, useMemo, useState } from "react";
+import { Check, ChevronDown, Search, X } from "lucide-react";
+import { useModesySettings } from "@/lib/modesy-settings";
+import { countryOptions } from "../../lib/countries";
+
+type LocationModalProps = {
+  isOpen: boolean;
   onClose: () => void;
-  onSelect: (location: string) => void;
-}
-
-// Kamus Bahasa Indonesia untuk negara-negara populer agar bisa dicari (misal: "jepang", "amerika")
-const countryAliases: Record<string, string> = {
-  JP: 'jepang',
-  US: 'amerika amerika serikat usa',
-  GB: 'inggris britania raya uk',
-  CN: 'cina tiongkok china',
-  KR: 'korea korsel korea selatan',
-  DE: 'jerman',
-  FR: 'prancis perancis',
-  ES: 'spanyol',
-  IT: 'itali italia',
-  NL: 'belanda',
-  MY: 'malaysia',
-  SG: 'singapura',
-  TH: 'thailand',
-  VN: 'vietnam',
-  PH: 'filipina',
-  AU: 'australia',
-  NZ: 'selandia baru',
-  SA: 'arab saudi',
-  AE: 'uni emirat arab',
-  EG: 'mesir',
-  TR: 'turki',
-  RU: 'rusia',
-  IN: 'india',
-  ID: 'indonesia',
+  selectedCountry: string;
+  onSelect: (country: string) => void;
 };
 
-export default function LocationModal({ onClose, onSelect }: Props) {
-  const [selectedCountry, setSelectedCountry] = useState('');
-  const [selectedState, setSelectedState] = useState('');
 
-  const countryOptions = useMemo(() => {
-    return allCountries.map((c) => ({
-      value: c.code,
-      label: c.name, // Nama bahasa Inggris (tetap ditampilkan di layar)
-      keywords: countryAliases[c.code] || '', // Alias bahasa Indonesia (untuk pencarian)
-    }));
-  }, []);
+export default function LocationModal({
+  isOpen,
+  onClose,
+  selectedCountry,
+  onSelect,
+}: LocationModalProps) {
+  const { language, t } = useModesySettings();
+  const [search, setSearch] = useState("");
+  const [chosenCountry, setChosenCountry] = useState(selectedCountry);
 
-  const stateOptions = useMemo(() => {
-    if (!selectedCountry) return [];
-    const states = State.getStatesOfCountry(selectedCountry) || [];
-    return states.map((s) => ({
-      value: s.isoCode,
-      label: s.name,
-    }));
-  }, [selectedCountry]);
-
-  const handleCountryChange = (countryCode: string) => {
-    setSelectedCountry(countryCode);
-    setSelectedState('');
-  };
-
-  const handleApply = () => {
-    const countryName = allCountries.find((c) => c.code === selectedCountry)?.name;
-    const stateName = State.getStateByCodeAndCountry(selectedState, selectedCountry)?.name;
-    
-    if (stateName && countryName) {
-      onSelect(`${stateName}, ${countryName}`);
-    } else if (countryName) {
-      onSelect(countryName);
-    } else {
-      onSelect('All Locations');
+  useEffect(() => {
+    if (isOpen) {
+      setSearch("");
+      setChosenCountry(selectedCountry);
     }
-  };
+  }, [isOpen, selectedCountry]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") onClose();
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
+  const filteredCountries = useMemo(() => {
+    const query = search.trim().toLocaleLowerCase();
+
+    if (!query) return countryOptions;
+
+    return countryOptions.filter(
+      (country) =>
+        country.en.toLocaleLowerCase().includes(query) ||
+        country.ar.toLocaleLowerCase().includes(query),
+    );
+  }, [search]);
+
+  if (!isOpen) return null;
+
+  function handleSubmit() {
+    if (!chosenCountry) return;
+    onSelect(chosenCountry);
+    onClose();
+  }
 
   return (
-    <div 
-      className="fixed inset-0 z-100 flex items-center justify-center bg-black/40 backdrop-blur-sm"
-      onClick={onClose}
+    <div
+      className="fixed inset-0 z-1000 flex items-center justify-center bg-black/50 px-4 py-6 backdrop-blur-[1px]"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) onClose();
+      }}
     >
-      <div 
-        className="bg-white rounded-lg shadow-xl w-full max-w-145 p-10 relative"
-        onClick={(e) => e.stopPropagation()}
+      <section
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="location-modal-title"
+        className="relative w-full max-w-125 animate-in fade-in zoom-in-95 duration-200 rounded-[3px] bg-white px-7.5 pb-8.25 pt-6.75 shadow-2xl"
       >
-        <button 
-          onClick={onClose} 
-          className="absolute top-6 right-6 text-gray-400 hover:text-gray-600 transition-colors"
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label={t("Close location dialog")}
+          className="absolute right-4.25 top-4.25 text-gray-400 transition-colors hover:text-gray-800"
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
+          <X size={19} strokeWidth={1.7} />
         </button>
 
-        <div className="text-center mb-8 mt-2">
-          <h3 className="text-[28px] font-medium text-gray-900 mb-3">Select Location</h3>
-          <p className="text-[16px] text-gray-500">Filter products by location</p>
-        </div>
+        <h2
+          id="location-modal-title"
+          className="text-center text-[23px] font-medium text-[#222]"
+        >
+          {t("Select Location")}
+        </h2>
 
-        <div className="space-y-4 mb-8">
-          <div>
-            <CustomSelect
-              placeholder="Country"
-              options={countryOptions}
-              value={selectedCountry}
-              onChange={handleCountryChange}
+        <p className="mt-4 text-center text-sm text-[#999]">
+          {t("Filter products by location")}
+        </p>
+
+        <div className="relative mt-5.25">
+          <div className="flex h-11.5 items-center rounded-[3px] border border-[#d9dce2] transition-colors focus-within:border-[#00a99d]">
+            <Search
+              size={17}
+              className="ml-3 shrink-0 text-gray-400"
+              aria-hidden="true"
+            />
+
+            <input
+              type="text"
+              value={search}
+              onChange={(event) => {
+                setSearch(event.target.value);
+                setChosenCountry("");
+              }}
+              placeholder={t("Search country...")}
+              aria-label={t("Search country")}
+              autoComplete="off"
+              className="h-full min-w-0 flex-1 bg-transparent px-3 text-sm text-[#555] outline-none placeholder:text-[#999]"
+            />
+
+            <ChevronDown
+              size={16}
+              className="mr-3 shrink-0 text-gray-400"
+              aria-hidden="true"
             />
           </div>
-          
-          <div>
-            <CustomSelect
-              placeholder="State"
-              options={stateOptions}
-              value={selectedState}
-              onChange={setSelectedState}
-              disabled={!selectedCountry || stateOptions.length === 0} 
-            />
+
+          <div className="mt-2 max-h-47.5 overflow-y-auto rounded-[3px] border border-gray-100 bg-white">
+            {filteredCountries.length > 0 ? (
+              filteredCountries.map((country) => {
+                const label = language === "ar" ? country.ar : country.en;
+                const isSelected = chosenCountry === country.en;
+
+                return (
+                  <button
+                    key={country.en}
+                    type="button"
+                    onClick={() => {
+                      setChosenCountry(country.en);
+                      setSearch(label);
+                    }}
+                    className={`flex w-full items-center justify-between px-4 py-2.5 text-left text-sm transition-colors hover:bg-[#f4fbfa] hover:text-[#00a99d] ${
+                      isSelected
+                        ? "bg-[#f0fbf9] text-[#009e92]"
+                        : "text-[#555]"
+                    }`}
+                  >
+                    <span>{label}</span>
+                    {isSelected && <Check size={16} />}
+                  </button>
+                );
+              })
+            ) : (
+              <p className="px-4 py-4 text-center text-sm text-gray-500">
+                {t("No countries found")}
+              </p>
+            )}
           </div>
         </div>
 
         <button
-          onClick={handleApply}
-          className="w-full py-3.5 text-[16px] font-medium text-white rounded bg-[#00a991] hover:bg-[#00927e] transition-colors"
+          type="button"
+          onClick={handleSubmit}
+          disabled={!chosenCountry}
+          className="mt-5 flex h-11.5 w-full items-center justify-center rounded-[3px] bg-[#00a99d] text-sm font-medium text-white transition-all duration-200 hover:bg-[#008f85] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
         >
-          Select Location
+          {t("Select Location")}
         </button>
-      </div>
+      </section>
     </div>
   );
 }
